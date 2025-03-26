@@ -1,5 +1,5 @@
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   ReactFlow,
   MiniMap,
@@ -10,6 +10,8 @@ import {
   addEdge,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
+import { Save } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 import ClipNode from './ClipNode';
 import TrimNode from './TrimNode';
@@ -67,14 +69,56 @@ const initialEdges = [
 const NodeEditor = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [isSaving, setIsSaving] = useState(false);
+  const { toast } = useToast();
 
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
   );
 
+  const handleSave = () => {
+    setIsSaving(true);
+    
+    // Save the current flow state to localStorage
+    const flow = {
+      nodes,
+      edges,
+      timestamp: new Date().toISOString(),
+    };
+    
+    try {
+      localStorage.setItem('savedFlow', JSON.stringify(flow));
+      
+      toast({
+        title: "Flow Saved",
+        description: "Your node configuration has been saved successfully.",
+      });
+    } catch (error) {
+      console.error('Error saving flow:', error);
+      toast({
+        title: "Save Failed",
+        description: "There was an error saving your node configuration.",
+        variant: "destructive",
+      });
+    }
+    
+    setIsSaving(false);
+  };
+
   return (
-    <div className="h-[500px] w-full rounded-xl overflow-hidden glass-panel">
+    <div className="relative h-[500px] w-full rounded-xl overflow-hidden glass-panel">
+      <div className="absolute top-4 right-4 z-10">
+        <button 
+          onClick={handleSave}
+          disabled={isSaving}
+          className="bg-tube-gray/80 hover:bg-tube-gray flex items-center gap-2 text-tube-white py-2 px-3 rounded-md text-sm transition-colors"
+        >
+          <Save className="w-4 h-4" />
+          {isSaving ? 'Saving...' : 'Save Flow'}
+        </button>
+      </div>
+      
       <ReactFlow
         nodes={nodes}
         edges={edges}

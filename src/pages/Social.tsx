@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Instagram, Youtube, Twitter, Facebook, Linkedin, Plus, MoreVertical, Info, Film, Camera } from 'lucide-react';
 import PageContainer from '@/components/PageContainer';
@@ -6,7 +5,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Avatar } from '@/components/ui/avatar';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 interface SocialPlatform {
@@ -61,7 +59,6 @@ const Social = () => {
   return (
     <PageContainer>
       <div className="space-y-8">
-        {/* Header Section */}
         <div className="flex justify-between items-center mb-6">
           <div>
             <h1 className="text-3xl font-bold text-tube-white mb-2">Social Media</h1>
@@ -72,7 +69,6 @@ const Social = () => {
           </Button>
         </div>
         
-        {/* Social Media Accounts Section */}
         <section>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold text-tube-white">Your social media accounts</h2>
@@ -127,7 +123,6 @@ const Social = () => {
           </div>
         </section>
         
-        {/* Posts Section */}
         <section className="glass-panel rounded-xl p-6">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold text-tube-white">Posts</h2>
@@ -148,7 +143,6 @@ const Social = () => {
               </TabsList>
               
               <div className="flex gap-3">
-                {/* These would be dropdowns in a real implementation */}
                 <Button variant="outline" size="sm" className="bg-transparent border-tube-lightgray/30">
                   Last 7 days
                 </Button>

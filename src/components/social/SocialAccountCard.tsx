@@ -31,7 +31,7 @@ const SocialAccountCard: React.FC<SocialAccountCardProps> = ({
     'bg-blue-700';
 
   return (
-    <div className="relative bg-[#111] rounded-lg p-4 flex flex-col items-center justify-between h-[180px] w-full">
+    <div className="relative bg-black rounded-lg p-4 flex flex-col items-center justify-between h-[150px] w-full">
       {/* More options button */}
       <button 
         onClick={onMoreOptions}
@@ -41,16 +41,16 @@ const SocialAccountCard: React.FC<SocialAccountCardProps> = ({
       </button>
       
       {/* Icon */}
-      <div className={`${iconBackgroundClass} rounded-full p-4 flex items-center justify-center w-16 h-16`}>
-        <SocialIcon iconName={iconName} className="h-7 w-7" />
+      <div className={`${iconBackgroundClass} rounded-full p-3 flex items-center justify-center w-14 h-14`}>
+        <SocialIcon iconName={iconName} className="h-6 w-6" />
       </div>
       
       {/* Platform name */}
-      <div className="text-white font-medium mt-2 mb-4">{platform}</div>
+      <div className="text-white font-medium mt-2">{platform}</div>
       
       {/* Connection status */}
       {connected ? (
-        <div className="flex items-center gap-1 text-green-500 text-sm bg-green-500/10 px-3 py-1 rounded-full">
+        <div className="flex items-center gap-1 text-green-500 text-xs">
           <span className="h-2 w-2 bg-green-500 rounded-full"></span>
           Connected
         </div>

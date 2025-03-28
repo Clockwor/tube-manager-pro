@@ -172,7 +172,7 @@ const SocialAccountDetail = () => {
                     </div>
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-4 sm:gap-8">
+                  <div className="grid grid-cols-2 gap-4 sm:gap-8 mb-4">
                     <div>
                       <p className="text-tube-white/70 mb-1">Followers</p>
                       <p className="text-xl font-bold text-tube-white">{account.followers}</p>
@@ -180,6 +180,22 @@ const SocialAccountDetail = () => {
                     <div>
                       <p className="text-tube-white/70 mb-1">Following</p>
                       <p className="text-xl font-bold text-tube-white">{account.following}</p>
+                    </div>
+                  </div>
+                  
+                  {/* Connected Social Media Accounts */}
+                  <div>
+                    <p className="text-tube-white/70 mb-3">Connected Accounts</p>
+                    <div className="flex flex-wrap gap-2">
+                      {socialAccountsData.map((socialAccount) => (
+                        <div
+                          key={socialAccount.id}
+                          className={`rounded-md p-2 ${socialAccount.platformColor} cursor-pointer hover:opacity-90 transition-opacity`}
+                          onClick={() => navigate(`/social/${socialAccount.id}`)}
+                        >
+                          {socialAccount.icon}
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>

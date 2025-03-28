@@ -32,6 +32,20 @@ export const socialAccountsData: SocialAccount[] = [
     avatarFallback: 'TI'
   },
   {
+    id: 'youtube',
+    name: 'tube_master',
+    platform: 'Youtube',
+    platformColor: 'bg-red-600',
+    iconName: 'Youtube',
+    lastActive: '1 day ago',
+    followers: '48,269',
+    following: '56',
+    status: 'Running',
+    statusColor: 'bg-green-500/10 text-green-500 border-green-500/20',
+    avatar: '/lovable-uploads/69db3c63-3162-4d91-9b5a-232be4dc76f6.png',
+    avatarFallback: 'TM'
+  },
+  {
     id: 'twitter',
     name: 'viral_content',
     platform: 'X',
@@ -58,20 +72,6 @@ export const socialAccountsData: SocialAccount[] = [
     statusColor: 'bg-green-500/10 text-green-500 border-green-500/20',
     avatar: '/lovable-uploads/69db3c63-3162-4d91-9b5a-232be4dc76f6.png',
     avatarFallback: 'BP'
-  },
-  {
-    id: 'youtube',
-    name: 'tube_master',
-    platform: 'Youtube',
-    platformColor: 'bg-red-600',
-    iconName: 'Youtube',
-    lastActive: '1 day ago',
-    followers: '48,269',
-    following: '56',
-    status: 'Running',
-    statusColor: 'bg-green-500/10 text-green-500 border-green-500/20',
-    avatar: '/lovable-uploads/69db3c63-3162-4d91-9b5a-232be4dc76f6.png',
-    avatarFallback: 'TM'
   },
   {
     id: 'linkedin',

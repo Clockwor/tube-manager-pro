@@ -5,9 +5,10 @@ import { Film, Instagram, Youtube, Twitter, Facebook, Linkedin, LucideIcon } fro
 interface SocialIconProps {
   iconName: string;
   className?: string;
+  color?: string;
 }
 
-const SocialIcon: React.FC<SocialIconProps> = ({ iconName, className = "h-4 w-4" }) => {
+const SocialIcon: React.FC<SocialIconProps> = ({ iconName, className = "h-4 w-4", color = "white" }) => {
   const iconMap: Record<string, LucideIcon> = {
     'Film': Film,
     'Instagram': Instagram,
@@ -23,7 +24,7 @@ const SocialIcon: React.FC<SocialIconProps> = ({ iconName, className = "h-4 w-4"
     return null;
   }
   
-  return <IconComponent className={className} />;
+  return <IconComponent className={className} color={color} />;
 };
 
 export default SocialIcon;

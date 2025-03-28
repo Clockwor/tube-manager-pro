@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Instagram, Youtube, Twitter, Facebook, Linkedin, Plus, MoreVertical, Info, Film, Camera } from 'lucide-react';
@@ -8,12 +7,15 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import SocialIcon from '@/components/social/SocialIcon';
+import { socialAccountsData } from '@/data/socialAccounts';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 interface SocialPlatform {
   name: string;
   id: string;
-  icon: React.ReactNode;
+  iconName: string;
+  platformColor: string;
   connected: boolean;
   accountId?: string;
   avatarUrl?: string;
@@ -39,7 +41,8 @@ const Social = () => {
     { 
       id: 'tiktok',
       name: 'TikTok', 
-      icon: <Film className="h-7 w-7 text-white" />, 
+      iconName: 'Film',
+      platformColor: 'bg-black',
       connected: true, 
       accountId: 'socialmedia_growth',
       avatarUrl: '/lovable-uploads/69db3c63-3162-4d91-9b5a-232be4dc76f6.png',
@@ -51,7 +54,8 @@ const Social = () => {
     { 
       id: 'instagram',
       name: 'Instagram', 
-      icon: <Instagram className="h-7 w-7 text-white" />, 
+      iconName: 'Instagram',
+      platformColor: 'bg-gradient-to-tr from-purple-600 via-pink-500 to-yellow-400',
       connected: true, 
       accountId: 'tech_influencer',
       avatarUrl: '/lovable-uploads/69db3c63-3162-4d91-9b5a-232be4dc76f6.png',
@@ -63,7 +67,8 @@ const Social = () => {
     { 
       id: 'youtube',
       name: 'Youtube', 
-      icon: <Youtube className="h-7 w-7 text-white" />, 
+      iconName: 'Youtube',
+      platformColor: 'bg-red-600',
       connected: true, 
       accountId: 'tube_master',
       avatarUrl: '/lovable-uploads/69db3c63-3162-4d91-9b5a-232be4dc76f6.png',
@@ -75,7 +80,8 @@ const Social = () => {
     { 
       id: 'twitter',
       name: 'X', 
-      icon: <Twitter className="h-7 w-7 text-white" />, 
+      iconName: 'Twitter',
+      platformColor: 'bg-blue-400',
       connected: true, 
       accountId: 'viral_content',
       avatarUrl: '/lovable-uploads/69db3c63-3162-4d91-9b5a-232be4dc76f6.png',
@@ -87,7 +93,8 @@ const Social = () => {
     { 
       id: 'facebook',
       name: 'Facebook', 
-      icon: <Facebook className="h-7 w-7 text-white" />, 
+      iconName: 'Facebook',
+      platformColor: 'bg-blue-600',
       connected: true, 
       accountId: 'business_page',
       avatarUrl: '/lovable-uploads/69db3c63-3162-4d91-9b5a-232be4dc76f6.png',
@@ -99,7 +106,8 @@ const Social = () => {
     { 
       id: 'linkedin',
       name: 'LinkedIn', 
-      icon: <Linkedin className="h-7 w-7 text-white" />, 
+      iconName: 'Linkedin',
+      platformColor: 'bg-blue-700',
       connected: false 
     },
   ]);
@@ -155,7 +163,7 @@ const Social = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {platforms.map((platform) => (
               <Card 
-                key={platform.name} 
+                key={platform.id} 
                 className={`border-tube-lightgray/30 bg-tube-gray/40 backdrop-blur-md relative group hover:border-purple-500/50 transition-all duration-300 ${platform.connected ? 'cursor-pointer' : ''}`}
                 onClick={() => platform.connected && handleAccountDetail(platform.id)}
               >
@@ -173,7 +181,7 @@ const Social = () => {
                       platform.name === 'Facebook' ? 'bg-blue-600' :
                       'bg-blue-700'
                     }`}>
-                      {platform.icon}
+                      <SocialIcon iconName={platform.iconName} className="h-7 w-7 text-white" />
                     </div>
                     
                     <div className="ml-3 flex-1">

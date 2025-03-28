@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { SocialAccount } from '@/types/social';
+import SocialIcon from './SocialIcon';
 
 interface AccountInfoCardProps {
   account: SocialAccount;
@@ -32,7 +33,7 @@ const AccountInfoCard: React.FC<AccountInfoCardProps> = ({ account, allAccounts 
                 <div className="flex items-center">
                   <h2 className="text-2xl font-bold text-tube-white mr-2">{account.name}</h2>
                   <div className={`rounded-full p-1.5 ${account.platformColor} ml-1`}>
-                    {account.icon}
+                    <SocialIcon iconName={account.iconName} />
                   </div>
                 </div>
                 <p className="text-tube-white/70">Last active: {account.lastActive}</p>
@@ -78,7 +79,7 @@ const AccountInfoCard: React.FC<AccountInfoCardProps> = ({ account, allAccounts 
                     className={`rounded-md p-2 ${socialAccount.platformColor} cursor-pointer hover:opacity-90 transition-opacity`}
                     onClick={() => navigate(`/social/${socialAccount.id}`)}
                   >
-                    {socialAccount.icon}
+                    <SocialIcon iconName={socialAccount.iconName} />
                   </div>
                 ))}
               </div>

@@ -1,4 +1,6 @@
+
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Instagram, Youtube, Twitter, Facebook, Linkedin, Plus, MoreVertical, Info, Film, Camera } from 'lucide-react';
 import PageContainer from '@/components/PageContainer';
 import { Card, CardContent } from '@/components/ui/card';
@@ -6,12 +8,19 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 interface SocialPlatform {
   name: string;
+  id: string;
   icon: React.ReactNode;
   connected: boolean;
   accountId?: string;
+  avatarUrl?: string;
+  followers?: string;
+  following?: string;
+  lastActive?: string;
+  status?: 'Running' | 'Start' | 'Fix Issues';
 }
 
 interface Post {
@@ -25,13 +34,74 @@ interface Post {
 }
 
 const Social = () => {
+  const navigate = useNavigate();
   const [platforms, setPlatforms] = useState<SocialPlatform[]>([
-    { name: 'TikTok', icon: <Film className="h-7 w-7 text-white" />, connected: true, accountId: '@myaccount' },
-    { name: 'Instagram', icon: <Instagram className="h-7 w-7 text-white" />, connected: true, accountId: '@myaccount' },
-    { name: 'Youtube', icon: <Youtube className="h-7 w-7 text-white" />, connected: true, accountId: '@myaccount' },
-    { name: 'X', icon: <Twitter className="h-7 w-7 text-white" />, connected: false },
-    { name: 'Facebook', icon: <Facebook className="h-7 w-7 text-white" />, connected: true, accountId: '@myaccount' },
-    { name: 'LinkedIn', icon: <Linkedin className="h-7 w-7 text-white" />, connected: false },
+    { 
+      id: 'tiktok',
+      name: 'TikTok', 
+      icon: <Film className="h-7 w-7 text-white" />, 
+      connected: true, 
+      accountId: 'socialmedia_growth',
+      avatarUrl: '/lovable-uploads/69db3c63-3162-4d91-9b5a-232be4dc76f6.png',
+      followers: '4,352',
+      following: '1,234',
+      lastActive: '2 min ago',
+      status: 'Running'
+    },
+    { 
+      id: 'instagram',
+      name: 'Instagram', 
+      icon: <Instagram className="h-7 w-7 text-white" />, 
+      connected: true, 
+      accountId: 'tech_influencer',
+      avatarUrl: '/lovable-uploads/69db3c63-3162-4d91-9b5a-232be4dc76f6.png',
+      followers: '22,641',
+      following: '543',
+      lastActive: '1 hour ago',
+      status: 'Start'
+    },
+    { 
+      id: 'youtube',
+      name: 'Youtube', 
+      icon: <Youtube className="h-7 w-7 text-white" />, 
+      connected: true, 
+      accountId: 'tube_master',
+      avatarUrl: '/lovable-uploads/69db3c63-3162-4d91-9b5a-232be4dc76f6.png',
+      followers: '48,269',
+      following: '56',
+      lastActive: '1 day ago',
+      status: 'Running'
+    },
+    { 
+      id: 'twitter',
+      name: 'X', 
+      icon: <Twitter className="h-7 w-7 text-white" />, 
+      connected: true, 
+      accountId: 'viral_content',
+      avatarUrl: '/lovable-uploads/69db3c63-3162-4d91-9b5a-232be4dc76f6.png',
+      followers: '156,700',
+      following: '325',
+      lastActive: '3 days ago',
+      status: 'Fix Issues'
+    },
+    { 
+      id: 'facebook',
+      name: 'Facebook', 
+      icon: <Facebook className="h-7 w-7 text-white" />, 
+      connected: true, 
+      accountId: 'business_page',
+      avatarUrl: '/lovable-uploads/69db3c63-3162-4d91-9b5a-232be4dc76f6.png',
+      followers: '8,943',
+      following: '112',
+      lastActive: '5 min ago',
+      status: 'Running'
+    },
+    { 
+      id: 'linkedin',
+      name: 'LinkedIn', 
+      icon: <Linkedin className="h-7 w-7 text-white" />, 
+      connected: false 
+    },
   ]);
 
   const [posts, setPosts] = useState<Post[]>([
@@ -56,6 +126,10 @@ const Social = () => {
     ));
   };
 
+  const handleAccountDetail = (platformId: string) => {
+    navigate(`/social/${platformId}`);
+  };
+
   return (
     <PageContainer>
       <div className="space-y-8">
@@ -78,41 +152,82 @@ const Social = () => {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {platforms.map((platform) => (
-              <Card key={platform.name} className="border-tube-lightgray/30 bg-tube-gray/40 backdrop-blur-md relative group">
-                <CardContent className="flex flex-col items-center justify-center p-6 relative">
-                  <button className="absolute top-2 right-2 text-tube-white/60 hover:text-tube-white">
+              <Card 
+                key={platform.name} 
+                className={`border-tube-lightgray/30 bg-tube-gray/40 backdrop-blur-md relative group hover:border-purple-500/50 transition-all duration-300 ${platform.connected ? 'cursor-pointer' : ''}`}
+                onClick={() => platform.connected && handleAccountDetail(platform.id)}
+              >
+                <CardContent className="p-4 flex flex-col">
+                  <button className="absolute top-2 right-2 text-tube-white/60 hover:text-tube-white z-10">
                     <MoreVertical className="h-5 w-5" />
                   </button>
                   
-                  <div className={`rounded-full p-3 ${
-                    platform.name === 'TikTok' ? 'bg-black' :
-                    platform.name === 'Instagram' ? 'bg-gradient-to-tr from-purple-600 via-pink-500 to-yellow-400' :
-                    platform.name === 'Youtube' ? 'bg-red-600' :
-                    platform.name === 'X' ? 'bg-blue-400' :
-                    platform.name === 'Facebook' ? 'bg-blue-600' :
-                    'bg-blue-700'
-                  }`}>
-                    {platform.icon}
+                  <div className="flex items-start mb-3">
+                    <div className={`rounded-full p-2.5 ${
+                      platform.name === 'TikTok' ? 'bg-black' :
+                      platform.name === 'Instagram' ? 'bg-gradient-to-tr from-purple-600 via-pink-500 to-yellow-400' :
+                      platform.name === 'Youtube' ? 'bg-red-600' :
+                      platform.name === 'X' ? 'bg-blue-400' :
+                      platform.name === 'Facebook' ? 'bg-blue-600' :
+                      'bg-blue-700'
+                    }`}>
+                      {platform.icon}
+                    </div>
+                    
+                    <div className="ml-3 flex-1">
+                      <h3 className="font-semibold text-tube-white text-lg">{platform.name}</h3>
+                      {platform.connected && platform.accountId && (
+                        <p className="text-tube-white/70 text-sm mb-1">{platform.accountId}</p>
+                      )}
+                    </div>
                   </div>
                   
-                  <h3 className="mt-3 font-semibold text-tube-white">{platform.name}</h3>
-                  
-                  {platform.connected ? (
-                    <Badge 
-                      variant="outline" 
-                      className="mt-3 px-3 py-1 bg-green-500/10 text-green-500 border-green-500/20 flex items-center gap-1"
-                    >
-                      <span className="h-2 w-2 rounded-full bg-green-500"></span>
-                      Connected
-                    </Badge>
+                  {platform.connected && platform.accountId ? (
+                    <>
+                      <div className="flex items-center justify-between mb-3">
+                        <div>
+                          <p className="text-xs text-tube-white/70">Followers</p>
+                          <p className="font-semibold text-tube-white">{platform.followers}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-tube-white/70">Following</p>
+                          <p className="font-semibold text-tube-white">{platform.following}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center justify-between mt-auto pt-2">
+                        <Badge 
+                          variant="outline" 
+                          className={`
+                            px-3 py-1 
+                            ${platform.status === 'Running' ? 'bg-green-500/10 text-green-500 border-green-500/20' : 
+                              platform.status === 'Start' ? 'bg-blue-500/10 text-blue-500 border-blue-500/20' : 
+                              'bg-red-500/10 text-red-500 border-red-500/20'} 
+                            flex items-center gap-1
+                          `}
+                        >
+                          <span className={`h-2 w-2 rounded-full ${
+                            platform.status === 'Running' ? 'bg-green-500' :
+                            platform.status === 'Start' ? 'bg-blue-500' :
+                            'bg-red-500'
+                          }`}></span>
+                          {platform.status}
+                        </Badge>
+                        
+                        <p className="text-xs text-tube-white/70">{platform.lastActive}</p>
+                      </div>
+                    </>
                   ) : (
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="mt-3 bg-transparent text-tube-white border-tube-lightgray/50 hover:bg-tube-lightgray/20"
-                      onClick={() => handleConnect(platform.name)}
+                      className="mt-3 bg-transparent text-tube-white border-tube-lightgray/50 hover:bg-tube-lightgray/20 self-start"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleConnect(platform.name);
+                      }}
                     >
                       Connect
                     </Button>

@@ -1,14 +1,7 @@
 
 import React from 'react';
 import SocialPlatformCard from './SocialPlatformCard';
-
-interface SocialPlatform {
-  name: string;
-  icon: React.ReactNode;
-  connected: boolean;
-  accountId?: string;
-  accountCount?: number;
-}
+import { SocialPlatform } from './types';
 
 interface SocialPlatformListProps {
   platforms: SocialPlatform[];
@@ -29,6 +22,7 @@ const SocialPlatformList: React.FC<SocialPlatformListProps> = ({
           connected={platform.connected}
           accountId={platform.accountId}
           accountCount={platform.accountCount}
+          accounts={platform.accounts}
           onConnect={onConnect}
         />
       ))}

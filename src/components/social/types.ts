@@ -1,12 +1,22 @@
 
 import { ReactNode } from 'react';
 
+export interface SocialAccount {
+  id: string;
+  username: string;
+  profilePicture: string;
+  followers: number;
+  following: number;
+  posts: number;
+}
+
 export interface SocialPlatform {
   name: string;
   icon: ReactNode;
   connected: boolean;
   accountId?: string;
-  accountCount?: number; // Adding a count to track number of accounts
+  accountCount?: number;
+  accounts?: SocialAccount[];
 }
 
 export interface Post {

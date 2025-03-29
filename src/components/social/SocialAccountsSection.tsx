@@ -2,14 +2,7 @@
 import React from 'react';
 import { Info } from 'lucide-react';
 import SocialPlatformList from './SocialPlatformList';
-
-interface SocialPlatform {
-  name: string;
-  icon: React.ReactNode;
-  connected: boolean;
-  accountId?: string;
-  accountCount?: number;
-}
+import { SocialPlatform } from './types';
 
 interface SocialAccountsSectionProps {
   platforms: SocialPlatform[];

@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { BarChart2, Play, Film, Settings, Upload, Scissors, FileText, Share2, Menu, Home } from 'lucide-react';
+import { BarChart2, Play, Film, Settings, Upload, Scissors, FileText, Share2, Menu, Home, Users } from 'lucide-react';
 
 type NavItem = {
   name: string;
@@ -22,6 +22,7 @@ const AppSidebar = () => {
     { name: "Clip Creation", path: "/clips", icon: <Scissors size={20} /> },
     { name: "Transcription", path: "/transcription", icon: <FileText size={20} /> },
     { name: "Social Media", path: "/social", icon: <Share2 size={20} /> },
+    { name: "Accounts", path: "/accounts", icon: <Users size={20} /> },
     { name: "Settings", path: "/settings", icon: <Settings size={20} /> },
   ];
 

@@ -7,6 +7,7 @@ interface SocialPlatform {
   icon: React.ReactNode;
   connected: boolean;
   accountId?: string;
+  accountCount?: number;
 }
 
 interface SocialPlatformListProps {
@@ -27,6 +28,7 @@ const SocialPlatformList: React.FC<SocialPlatformListProps> = ({
           icon={platform.icon}
           connected={platform.connected}
           accountId={platform.accountId}
+          accountCount={platform.accountCount}
           onConnect={onConnect}
         />
       ))}

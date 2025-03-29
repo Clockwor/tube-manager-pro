@@ -6,6 +6,7 @@ export interface SocialPlatform {
   icon: ReactNode;
   connected: boolean;
   accountId?: string;
+  accountCount?: number; // Adding a count to track number of accounts
 }
 
 export interface Post {

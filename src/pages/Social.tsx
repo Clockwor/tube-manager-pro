@@ -10,11 +10,11 @@ import { SocialPlatform, Post } from '@/components/social/types';
 
 const Social = () => {
   const [platforms, setPlatforms] = useState<SocialPlatform[]>([
-    { name: 'TikTok', icon: <Music className="h-7 w-7 text-white" />, connected: true, accountId: '@myaccount' },
-    { name: 'Instagram', icon: <Instagram className="h-7 w-7 text-white" />, connected: true, accountId: '@myaccount' },
-    { name: 'Youtube', icon: <Youtube className="h-7 w-7 text-white" />, connected: true, accountId: '@myaccount' },
+    { name: 'TikTok', icon: <Music className="h-7 w-7 text-white" />, connected: true, accountId: '@myaccount', accountCount: 3 },
+    { name: 'Instagram', icon: <Instagram className="h-7 w-7 text-white" />, connected: true, accountId: '@myaccount', accountCount: 2 },
+    { name: 'Youtube', icon: <Youtube className="h-7 w-7 text-white" />, connected: true, accountId: '@myaccount', accountCount: 1 },
     { name: 'X', icon: <Twitter className="h-7 w-7 text-white" />, connected: false },
-    { name: 'Facebook', icon: <Facebook className="h-7 w-7 text-white" />, connected: true, accountId: '@myaccount' },
+    { name: 'Facebook', icon: <Facebook className="h-7 w-7 text-white" />, connected: true, accountId: '@myaccount', accountCount: 4 },
     { name: 'LinkedIn', icon: <Linkedin className="h-7 w-7 text-white" />, connected: false },
   ]);
 

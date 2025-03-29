@@ -10,6 +10,7 @@ interface SocialPlatformCardProps {
   icon: React.ReactNode;
   connected: boolean;
   accountId?: string;
+  accountCount?: number;
   onConnect: (platformName: string) => void;
 }
 
@@ -18,6 +19,7 @@ const SocialPlatformCard: React.FC<SocialPlatformCardProps> = ({
   icon,
   connected,
   accountId,
+  accountCount,
   onConnect,
 }) => {
   return (
@@ -41,13 +43,20 @@ const SocialPlatformCard: React.FC<SocialPlatformCardProps> = ({
         <h3 className="mt-3 font-semibold text-tube-white">{name}</h3>
         
         {connected ? (
-          <Badge 
-            variant="outline" 
-            className="mt-3 px-3 py-1 bg-green-500/10 text-green-500 border-green-500/20 flex items-center gap-1"
-          >
-            <span className="h-2 w-2 rounded-full bg-green-500"></span>
-            Connected
-          </Badge>
+          <>
+            <Badge 
+              variant="outline" 
+              className="mt-3 px-3 py-1 bg-green-500/10 text-green-500 border-green-500/20 flex items-center gap-1"
+            >
+              <span className="h-2 w-2 rounded-full bg-green-500"></span>
+              Connected
+            </Badge>
+            {accountCount !== undefined && (
+              <div className="mt-2 text-xs text-tube-white/70">
+                {accountCount} {accountCount === 1 ? 'account' : 'accounts'}
+              </div>
+            )}
+          </>
         ) : (
           <Button 
             variant="outline" 

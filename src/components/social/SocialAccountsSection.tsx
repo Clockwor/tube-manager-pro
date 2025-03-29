@@ -8,6 +8,7 @@ interface SocialPlatform {
   icon: React.ReactNode;
   connected: boolean;
   accountId?: string;
+  accountCount?: number;
 }
 
 interface SocialAccountsSectionProps {

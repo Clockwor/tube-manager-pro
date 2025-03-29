@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Instagram, Youtube, Twitter, Facebook, Linkedin, TikTok, Plus, MoreVertical, Info } from 'lucide-react';
+import { Instagram, Youtube, Twitter, Facebook, Linkedin, Plus, MoreVertical, Info, Music } from 'lucide-react';
 import PageContainer from '@/components/PageContainer';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -28,7 +28,7 @@ interface Post {
 
 const Social = () => {
   const [platforms, setPlatforms] = useState<SocialPlatform[]>([
-    { name: 'TikTok', icon: <TikTok className="h-7 w-7 text-black" />, connected: true, accountId: '@myaccount' },
+    { name: 'TikTok', icon: <Music className="h-7 w-7 text-white" />, connected: true, accountId: '@myaccount' },
     { name: 'Instagram', icon: <Instagram className="h-7 w-7 text-white" />, connected: true, accountId: '@myaccount' },
     { name: 'Youtube', icon: <Youtube className="h-7 w-7 text-white" />, connected: true, accountId: '@myaccount' },
     { name: 'X', icon: <Twitter className="h-7 w-7 text-white" />, connected: false },
@@ -191,7 +191,7 @@ const Social = () => {
                         <TableCell className="text-tube-white/70">{post.date}</TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
-                            <TikTok className="h-4 w-4" />
+                            <Music className="h-4 w-4" />
                             <span className="text-tube-white/70">{post.account}</span>
                           </div>
                         </TableCell>

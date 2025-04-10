@@ -1,22 +1,46 @@
 
 import React from 'react';
-import { Play, Users, Eye } from 'lucide-react';
+import { Users, Eye } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
 interface ChannelCardProps {
   name: string;
   subscribers: string;
   views: string;
   thumbnailUrl: string;
+  country?: string;
 }
+
+// Map of country codes to flag emojis
+const countryFlags: Record<string, string> = {
+  us: '🇺🇸',
+  uk: '🇬🇧',
+  ca: '🇨🇦',
+  au: '🇦🇺',
+  de: '🇩🇪',
+  fr: '🇫🇷',
+  jp: '🇯🇵',
+  kr: '🇰🇷',
+  cn: '🇨🇳',
+  in: '🇮🇳',
+  br: '🇧🇷',
+  mx: '🇲🇽',
+  es: '🇪🇸',
+  it: '🇮🇹',
+  ru: '🇷🇺',
+  tr: '🇹🇷'
+};
 
 const ChannelCard: React.FC<ChannelCardProps> = ({ 
   name, 
   subscribers, 
   views, 
-  thumbnailUrl 
+  thumbnailUrl,
+  country
 }) => {
   return (
-    <div className="glass-panel rounded-xl overflow-hidden hover-scale transition-all duration-300 card-shadow">
+    <div className="glass-panel rounded-xl overflow-hidden hover-scale transition-all duration-300 card-shadow bg-tube-darkest">
       <div 
         className="h-32 bg-cover bg-center relative" 
         style={{ backgroundImage: `url(${thumbnailUrl})` }}
@@ -27,10 +51,15 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
             {thumbnailUrl ? (
               <img src={thumbnailUrl} alt={name} className="w-full h-full object-cover" />
             ) : (
-              <Play size={16} />
+              <div className="font-bold">{name.charAt(0)}</div>
             )}
           </div>
-          <h3 className="ml-2 font-bold text-white text-shadow truncate max-w-[180px]">{name}</h3>
+          <div className="ml-2 flex items-center">
+            <h3 className="font-bold text-white text-shadow truncate max-w-[140px]">{name}</h3>
+            {country && countryFlags[country] && (
+              <span className="ml-2 text-lg" title={country.toUpperCase()}>{countryFlags[country]}</span>
+            )}
+          </div>
         </div>
       </div>
       
@@ -47,12 +76,19 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
         </div>
         
         <div className="flex justify-between">
-          <button className="px-3 py-1.5 bg-tube-red hover:bg-tube-darkred text-white text-sm rounded-md transition-colors">
+          <Button 
+            size="sm" 
+            className="bg-tube-red hover:bg-tube-darkred text-white"
+          >
             Manage
-          </button>
-          <button className="px-3 py-1.5 bg-tube-gray hover:bg-tube-lightgray text-white text-sm rounded-md transition-colors">
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            className="bg-tube-gray/40 text-tube-white border-tube-lightgray/20 hover:bg-tube-gray"
+          >
             View Studio
-          </button>
+          </Button>
         </div>
       </div>
     </div>

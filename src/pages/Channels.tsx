@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 // Channel data with country information
 const channelsData = [
   {
+    id: '1',
     name: 'Tech Tutorials',
     subscribers: '120K',
     views: '5.2M',
@@ -14,6 +15,7 @@ const channelsData = [
     country: 'us'
   },
   {
+    id: '2',
     name: 'Gaming Channel',
     subscribers: '85K',
     views: '3.8M',
@@ -21,6 +23,7 @@ const channelsData = [
     country: 'uk'
   },
   {
+    id: '3',
     name: 'Travel Vlogs',
     subscribers: '45K',
     views: '1.7M',
@@ -42,9 +45,10 @@ const Channels = () => {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {channelsData.map((channel, index) => (
+        {channelsData.map((channel) => (
           <ChannelCard 
-            key={index}
+            key={channel.id}
+            id={channel.id}
             name={channel.name}
             subscribers={channel.subscribers}
             views={channel.views}

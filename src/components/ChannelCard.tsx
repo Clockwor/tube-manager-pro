@@ -3,6 +3,7 @@ import React from 'react';
 import { Users, Eye } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 interface ChannelCardProps {
   name: string;
@@ -10,6 +11,7 @@ interface ChannelCardProps {
   views: string;
   thumbnailUrl: string;
   country?: string;
+  id?: string; // Added ID prop for navigation
 }
 
 // Map of country codes to flag emojis
@@ -37,8 +39,15 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
   subscribers, 
   views, 
   thumbnailUrl,
-  country
+  country,
+  id = '1' // Default ID if not provided
 }) => {
+  const navigate = useNavigate();
+
+  const handleManageClick = () => {
+    navigate(`/channels/${id}`);
+  };
+
   return (
     <div className="glass-panel rounded-xl overflow-hidden hover-scale transition-all duration-300 card-shadow bg-tube-darkest">
       <div 
@@ -79,6 +88,7 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
           <Button 
             size="sm" 
             className="bg-tube-red hover:bg-tube-darkred text-white"
+            onClick={handleManageClick}
           >
             Manage
           </Button>

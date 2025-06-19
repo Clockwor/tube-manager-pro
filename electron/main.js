@@ -13,18 +13,20 @@ function createWindow() {
     minWidth: 940,
     minHeight: 600,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
+      nodeIntegration: false,
+      contextIsolation: true,
+      enableRemoteModule: false,
       preload: path.join(__dirname, 'preload.js')
     },
     icon: path.join(__dirname, '../public/favicon.ico'),
-    backgroundColor: '#171717', // Match the dark theme
+    backgroundColor: '#171717',
     show: false,
+    titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default'
   });
 
   // Load the app
   const startUrl = isDev 
-    ? 'http://localhost:8080' // Vite's default port
+    ? 'http://localhost:8080'
     : `file://${path.join(__dirname, '../dist/index.html')}`;
   
   mainWindow.loadURL(startUrl);
@@ -44,7 +46,22 @@ function createWindow() {
   });
 }
 
-app.on('ready', createWindow);
+// Handle window controls
+ipcMain.on('toMain', (event, data) => {
+  if (data.action === 'close') {
+    app.quit();
+  } else if (data.action === 'minimize') {
+    mainWindow.minimize();
+  } else if (data.action === 'maximize') {
+    if (mainWindow.isMaximized()) {
+      mainWindow.unmaximize();
+    } else {
+      mainWindow.maximize();
+    }
+  }
+});
+
+app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -53,9 +70,7 @@ app.on('window-all-closed', () => {
 });
 
 app.on('activate', () => {
-  if (mainWindow === null) {
+  if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
   }
 });
-
-// IPC communications can be set up here

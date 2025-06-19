@@ -8,6 +8,7 @@ import Layout from "./components/Layout";
 import Dashboard from "./pages/Index";
 import Channels from "./pages/Channels";
 import ChannelManage from "./pages/ChannelManage";
+import ChannelFollowing from "./pages/ChannelFollowing";
 import Analytics from "./pages/Analytics";
 import Upload from "./pages/Upload";
 import Clips from "./pages/Clips";
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/" element={<Dashboard />} />
             <Route path="/channels" element={<Channels />} />
             <Route path="/channels/:channelId" element={<ChannelManage />} />
+            <Route path="/channels/:channelId/following" element={<ChannelFollowing />} />
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/upload" element={<Upload />} />
             <Route path="/clips" element={<Clips />} />

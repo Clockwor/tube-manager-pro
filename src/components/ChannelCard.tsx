@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Users, Eye } from 'lucide-react';
+import { Users, Eye, Bell } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
@@ -11,7 +10,7 @@ interface ChannelCardProps {
   views: string;
   thumbnailUrl: string;
   country?: string;
-  id?: string; // Added ID prop for navigation
+  id?: string;
 }
 
 // Map of country codes to flag emojis
@@ -40,12 +39,16 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
   views, 
   thumbnailUrl,
   country,
-  id = '1' // Default ID if not provided
+  id = '1'
 }) => {
   const navigate = useNavigate();
 
   const handleManageClick = () => {
     navigate(`/channels/${id}`);
+  };
+
+  const handleFollowingChannelsClick = () => {
+    navigate(`/channels/${id}/following`);
   };
 
   return (
@@ -84,7 +87,7 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
           </div>
         </div>
         
-        <div className="flex justify-between">
+        <div className="flex justify-between gap-2">
           <Button 
             size="sm" 
             className="bg-tube-red hover:bg-tube-darkred text-white"
@@ -95,9 +98,11 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
           <Button
             size="sm"
             variant="outline"
-            className="bg-tube-gray/40 text-tube-white border-tube-lightgray/20 hover:bg-tube-gray"
+            className="bg-tube-gray/40 text-tube-white border-tube-lightgray/20 hover:bg-tube-gray flex items-center gap-1"
+            onClick={handleFollowingChannelsClick}
           >
-            View Studio
+            <Bell size={14} />
+            Takipteki Kanallar
           </Button>
         </div>
       </div>

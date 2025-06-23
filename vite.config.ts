@@ -20,6 +20,4 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  // Make sure Vite handles Electron environment correctly
-  base: process.env.ELECTRON_RENDERER_URL ? './' : '/',
 }));

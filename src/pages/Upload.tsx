@@ -1,6 +1,10 @@
 
 import React from 'react';
 import PageContainer from '@/components/PageContainer';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import YouTubePlanner from '@/components/upload/YouTubePlanner';
+import SocialMediaPlanner from '@/components/upload/SocialMediaPlanner';
+import { Video, Share2 } from 'lucide-react';
 
 const Upload = () => {
   return (
@@ -10,16 +14,32 @@ const Upload = () => {
         <p className="text-tube-white/70">Upload new videos and plan your content calendar</p>
       </div>
       
-      {/* Placeholder content */}
-      <div className="glass-panel rounded-xl p-6 card-shadow flex flex-col items-center justify-center">
-        <h2 className="text-xl font-medium text-tube-white mb-4">Content Scheduling</h2>
-        <p className="text-tube-white/70 text-center max-w-md mb-6">
-          This page will allow you to upload new videos, schedule publishing times, and manage your content calendar.
-        </p>
-        <div className="bg-tube-red px-4 py-2 rounded-md text-white font-medium">
-          Coming Soon
-        </div>
-      </div>
+      <Tabs defaultValue="youtube" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 mb-6 bg-tube-gray/40 border border-tube-lightgray/30">
+          <TabsTrigger 
+            value="youtube" 
+            className="flex items-center gap-2 data-[state=active]:bg-tube-red data-[state=active]:text-white text-tube-white/70"
+          >
+            <Video size={16} />
+            YouTube Planner
+          </TabsTrigger>
+          <TabsTrigger 
+            value="social" 
+            className="flex items-center gap-2 data-[state=active]:bg-tube-red data-[state=active]:text-white text-tube-white/70"
+          >
+            <Share2 size={16} />
+            Social Media Planner
+          </TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="youtube" className="mt-0">
+          <YouTubePlanner />
+        </TabsContent>
+        
+        <TabsContent value="social" className="mt-0">
+          <SocialMediaPlanner />
+        </TabsContent>
+      </Tabs>
     </PageContainer>
   );
 };

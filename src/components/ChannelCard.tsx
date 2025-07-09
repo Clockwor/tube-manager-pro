@@ -92,8 +92,7 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
           <div className="flex items-center gap-2">
             {country && countryFlags[country] && (
               <div className="flex items-center bg-tube-gray/30 px-2 py-1 rounded-full">
-                <span className="text-lg mr-1">{countryFlags[country]}</span>
-                <span className="text-xs text-tube-white/80 uppercase">{country}</span>
+                <span className="text-lg">{countryFlags[country]}</span>
               </div>
             )}
             <div className="flex items-center bg-tube-gray/30 px-2 py-1 rounded-full">

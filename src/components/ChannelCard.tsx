@@ -76,7 +76,7 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
       </div>
       
       <div className="p-4">
-        <div className="flex justify-between mb-3">
+        <div className="flex justify-between items-center mb-3">
           <div className="flex items-center text-sm text-tube-white/70">
             <Users size={14} className="mr-1" />
             <span>{subscribers} subscribers</span>
@@ -84,6 +84,24 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
           <div className="flex items-center text-sm text-tube-white/70">
             <Eye size={14} className="mr-1" />
             <span>{views} views</span>
+          </div>
+        </div>
+        
+        {/* Country and Language indicators */}
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            {country && countryFlags[country] && (
+              <div className="flex items-center bg-tube-gray/30 px-2 py-1 rounded-full">
+                <span className="text-lg mr-1">{countryFlags[country]}</span>
+                <span className="text-xs text-tube-white/80 uppercase">{country}</span>
+              </div>
+            )}
+            <div className="flex items-center bg-tube-gray/30 px-2 py-1 rounded-full">
+              <span className="text-xs text-tube-white/80">🌐 EN</span>
+            </div>
+          </div>
+          <div className="flex items-center text-xs text-tube-white/60">
+            <span>📺 YouTube</span>
           </div>
         </div>
         

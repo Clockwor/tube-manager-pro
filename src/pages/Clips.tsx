@@ -3,6 +3,7 @@ import React from 'react';
 import PageContainer from '@/components/PageContainer';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import NodeEditor from '@/components/clips/NodeEditor';
+import ProjectManagement from '@/components/clips/ProjectManagement';
 
 const Clips = () => {
   return (
@@ -15,6 +16,7 @@ const Clips = () => {
       <Tabs defaultValue="node-editor" className="w-full">
         <TabsList className="bg-tube-gray/40 mb-4">
           <TabsTrigger value="node-editor">Node Editor</TabsTrigger>
+          <TabsTrigger value="project-management">Project Management</TabsTrigger>
           <TabsTrigger value="assistant">AI Assistant</TabsTrigger>
         </TabsList>
         
@@ -26,6 +28,10 @@ const Clips = () => {
             </p>
             <NodeEditor />
           </div>
+        </TabsContent>
+        
+        <TabsContent value="project-management">
+          <ProjectManagement />
         </TabsContent>
         
         <TabsContent value="assistant">

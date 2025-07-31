@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Instagram, Youtube, Twitter, Facebook, Linkedin, Plus, Music } from 'lucide-react';
+import { Instagram, Youtube, Twitter, Facebook, Linkedin, Plus, Music, Scissors } from 'lucide-react';
 import PageContainer from '@/components/PageContainer';
 import { Button } from '@/components/ui/button';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import SocialHeader from '@/components/social/SocialHeader';
 import SocialAccountsSection from '@/components/social/SocialAccountsSection';
 import PostsTable from '@/components/social/PostsTable';
+import ShortsManager from '@/components/social/ShortsManager';
 import { SocialPlatform, Post } from '@/components/social/types';
 
 const Social = () => {
@@ -150,6 +152,7 @@ const Social = () => {
   ]);
 
   const [activeTab, setActiveTab] = useState('published');
+  const [mainTab, setMainTab] = useState('accounts');
 
   const handleConnect = (platformName: string) => {
     setPlatforms(platforms.map(platform => 
@@ -165,24 +168,43 @@ const Social = () => {
         {/* Header Section */}
         <SocialHeader />
         
-        {/* Social Media Accounts Section */}
-        <SocialAccountsSection platforms={platforms} onConnect={handleConnect} />
-        
-        {/* Posts Section */}
-        <section className="glass-panel rounded-xl p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold text-tube-white">Posts</h2>
-            <Button className="bg-purple-600 hover:bg-purple-700 gap-1">
-              <Plus className="h-4 w-4" /> New post
-            </Button>
-          </div>
+        <Tabs value={mainTab} onValueChange={setMainTab} className="w-full">
+          <TabsList className="bg-tube-gray/40 mb-6">
+            <TabsTrigger value="accounts">Sosyal Medya Hesapları</TabsTrigger>
+            <TabsTrigger value="posts">Gönderiler</TabsTrigger>
+            <TabsTrigger value="shorts">
+              <Scissors className="h-4 w-4 mr-2" />
+              Shorts Maker
+            </TabsTrigger>
+          </TabsList>
           
-          <PostsTable 
-            posts={posts}
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-          />
-        </section>
+          <TabsContent value="accounts">
+            {/* Social Media Accounts Section */}
+            <SocialAccountsSection platforms={platforms} onConnect={handleConnect} />
+          </TabsContent>
+          
+          <TabsContent value="posts">
+            {/* Posts Section */}
+            <section className="glass-panel rounded-xl p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-bold text-tube-white">Posts</h2>
+                <Button className="bg-purple-600 hover:bg-purple-700 gap-1">
+                  <Plus className="h-4 w-4" /> New post
+                </Button>
+              </div>
+              
+              <PostsTable 
+                posts={posts}
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+              />
+            </section>
+          </TabsContent>
+          
+          <TabsContent value="shorts">
+            <ShortsManager />
+          </TabsContent>
+        </Tabs>
       </div>
     </PageContainer>
   );

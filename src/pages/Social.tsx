@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Instagram, Youtube, Twitter, Facebook, Linkedin, Plus, Music, Scissors } from 'lucide-react';
+import { Instagram, Youtube, Twitter, Facebook, Linkedin, Plus, Music, Scissors, BarChart3 } from 'lucide-react';
 import PageContainer from '@/components/PageContainer';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -7,9 +7,12 @@ import SocialHeader from '@/components/social/SocialHeader';
 import SocialAccountsSection from '@/components/social/SocialAccountsSection';
 import PostsTable from '@/components/social/PostsTable';
 import ShortsManager from '@/components/social/ShortsManager';
+import SocialAnalytics from '@/components/social/SocialAnalytics';
+import CreatePostDialog from '@/components/social/CreatePostDialog';
 import { SocialPlatform, Post } from '@/components/social/types';
 
 const Social = () => {
+  const [showCreatePost, setShowCreatePost] = useState(false);
   const [platforms, setPlatforms] = useState<SocialPlatform[]>([
     { 
       name: 'TikTok', 
@@ -169,12 +172,19 @@ const Social = () => {
         <SocialHeader />
         
         <Tabs value={mainTab} onValueChange={setMainTab} className="w-full">
-          <TabsList className="bg-tube-gray/40 mb-6">
-            <TabsTrigger value="accounts">Sosyal Medya Hesapları</TabsTrigger>
-            <TabsTrigger value="posts">Gönderiler</TabsTrigger>
+          <TabsList className="bg-tube-gray/40 mb-6 grid grid-cols-4 w-full">
+            <TabsTrigger value="accounts">Hesaplar</TabsTrigger>
+            <TabsTrigger value="posts">
+              <Plus className="h-4 w-4 mr-2" />
+              Gönderiler
+            </TabsTrigger>
             <TabsTrigger value="shorts">
               <Scissors className="h-4 w-4 mr-2" />
               Shorts Maker
+            </TabsTrigger>
+            <TabsTrigger value="analytics">
+              <BarChart3 className="h-4 w-4 mr-2" />
+              Analitik
             </TabsTrigger>
           </TabsList>
           
@@ -187,9 +197,12 @@ const Social = () => {
             {/* Posts Section */}
             <section className="glass-panel rounded-xl p-6">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-bold text-tube-white">Posts</h2>
-                <Button className="bg-purple-600 hover:bg-purple-700 gap-1">
-                  <Plus className="h-4 w-4" /> New post
+                <h2 className="text-xl font-bold text-tube-white">Gönderiler</h2>
+                <Button 
+                  className="bg-purple-600 hover:bg-purple-700 gap-1"
+                  onClick={() => setShowCreatePost(true)}
+                >
+                  <Plus className="h-4 w-4" /> Yeni Gönderi
                 </Button>
               </div>
               
@@ -204,7 +217,17 @@ const Social = () => {
           <TabsContent value="shorts">
             <ShortsManager />
           </TabsContent>
+          
+          <TabsContent value="analytics">
+            <SocialAnalytics />
+          </TabsContent>
         </Tabs>
+        
+        <CreatePostDialog
+          isOpen={showCreatePost}
+          onClose={() => setShowCreatePost(false)}
+          availablePlatforms={platforms.filter(p => p.connected).map(p => p.name)}
+        />
       </div>
     </PageContainer>
   );

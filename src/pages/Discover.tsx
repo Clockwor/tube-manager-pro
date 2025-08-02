@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Search, TrendingUp, Users, Eye, BookOpen, Video, Target, Star } from 'lucide-react';
+import { Search, TrendingUp, Users, Eye, BookOpen, Video, Target, Star, Play, ExternalLink, Lightbulb, Image, UserPlus, X } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import PageContainer from '@/components/PageContainer';
 
 const Discover = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedVideo, setSelectedVideo] = useState<any>(null);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
   const outliers = [
     {
@@ -166,7 +169,14 @@ const Discover = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {outliers.map((video, index) => (
-                <div key={index} className="group cursor-pointer">
+                <div 
+                  key={index} 
+                  className="group cursor-pointer"
+                  onClick={() => {
+                    setSelectedVideo(video);
+                    setIsVideoModalOpen(true);
+                  }}
+                >
                   <div className="relative bg-tube-dark rounded-lg overflow-hidden border border-tube-lightgray/20 hover:border-tube-red/50 transition-all duration-300">
                     {/* Performance Badge */}
                     <div className="absolute top-3 left-3 z-10">
@@ -399,6 +409,130 @@ const Discover = () => {
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* Video Details Modal */}
+        <Dialog open={isVideoModalOpen} onOpenChange={setIsVideoModalOpen}>
+          <DialogContent className="max-w-4xl bg-tube-dark border-tube-lightgray/20 text-tube-white">
+            <DialogHeader className="flex flex-row items-center justify-between">
+              <DialogTitle className="text-xl font-bold">Video Details</DialogTitle>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsVideoModalOpen(false)}
+                className="text-tube-white/70 hover:text-tube-white"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </DialogHeader>
+            
+            {selectedVideo && (
+              <div className="space-y-6">
+                {/* Main Video Section */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Video Thumbnail */}
+                  <div className="relative">
+                    <div className="aspect-video bg-gradient-to-br from-tube-gray to-tube-lightgray rounded-lg overflow-hidden relative">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="bg-tube-red/90 rounded-full p-4">
+                          <Play className="h-8 w-8 text-white fill-current" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Video Stats */}
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-tube-gray/30 rounded-lg p-4 text-center">
+                        <div className="flex items-center justify-center mb-2">
+                          <Star className="h-5 w-5 text-green-400 mr-2" />
+                        </div>
+                        <div className="text-2xl font-bold text-green-400">&gt;{selectedVideo.performance}x</div>
+                        <div className="text-sm text-tube-white/60">Outlier Score</div>
+                      </div>
+                      
+                      <div className="bg-tube-gray/30 rounded-lg p-4 text-center">
+                        <div className="flex items-center justify-center mb-2">
+                          <Eye className="h-5 w-5 text-tube-red mr-2" />
+                        </div>
+                        <div className="text-2xl font-bold text-tube-white">{selectedVideo.views}</div>
+                        <div className="text-sm text-tube-white/60">Views</div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-tube-gray/30 rounded-lg p-4 text-center">
+                        <div className="text-2xl font-bold text-tube-white">{selectedVideo.vph}</div>
+                        <div className="text-sm text-tube-white/60">Views Per Hour</div>
+                      </div>
+                      
+                      <div className="bg-tube-gray/30 rounded-lg p-4 text-center">
+                        <div className="text-2xl font-bold text-red-400">Bad</div>
+                        <div className="text-sm text-tube-white/60">Engagement</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Video Info */}
+                <div className="space-y-3">
+                  <h2 className="text-xl font-bold text-tube-white">{selectedVideo.title}</h2>
+                  <div className="flex items-center gap-4 text-sm text-tube-white/70">
+                    <span>13,722,302 views • 4 years ago</span>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 bg-tube-red rounded-full flex items-center justify-center">
+                        <span className="text-xs font-bold text-white">OM</span>
+                      </div>
+                      <div>
+                        <div className="text-sm font-medium text-tube-white">{selectedVideo.channel}</div>
+                        <div className="text-xs text-tube-white/60">1.5M subs • 158,608 avg views</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Quick Actions */}
+                <div>
+                  <h3 className="text-lg font-semibold text-tube-white mb-4">Quick Actions</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    <Button variant="outline" className="justify-start border-tube-lightgray/20 text-tube-white hover:bg-tube-gray/30">
+                      <ExternalLink className="h-4 w-4 mr-2" />
+                      Open in YouTube
+                    </Button>
+                    
+                    <Button variant="outline" className="justify-start border-tube-lightgray/20 text-tube-white hover:bg-tube-gray/30">
+                      <Lightbulb className="h-4 w-4 mr-2" />
+                      Remix title
+                    </Button>
+                    
+                    <Button variant="outline" className="justify-start border-tube-lightgray/20 text-tube-white hover:bg-tube-gray/30">
+                      <Image className="h-4 w-4 mr-2" />
+                      Remix thumbnail
+                    </Button>
+                    
+                    <Button variant="outline" className="justify-start border-tube-lightgray/20 text-tube-white hover:bg-tube-gray/30">
+                      <Search className="h-4 w-4 mr-2" />
+                      Find similar titles
+                    </Button>
+                    
+                    <Button variant="outline" className="justify-start border-tube-lightgray/20 text-tube-white hover:bg-tube-gray/30">
+                      <Image className="h-4 w-4 mr-2" />
+                      Find similar thumbnails
+                    </Button>
+                    
+                    <Button variant="outline" className="justify-start border-tube-lightgray/20 text-tube-white hover:bg-tube-gray/30">
+                      <UserPlus className="h-4 w-4 mr-2" />
+                      Add as competitor
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </PageContainer>
   );

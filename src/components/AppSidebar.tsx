@@ -17,6 +17,7 @@ const AppSidebar = () => {
   const navItems: NavItem[] = [
     { name: "Dashboard", path: "/", icon: <Home size={20} /> },
     { name: "My Channels", path: "/channels", icon: <Play size={20} /> },
+    { name: "Discover", path: "/discover", icon: <BarChart2 size={20} /> },
     { name: "Analytics", path: "/analytics", icon: <BarChart2 size={20} /> },
     { name: "Upload & Schedule", path: "/upload", icon: <Upload size={20} /> },
     { name: "Clip Creation", path: "/clips", icon: <Scissors size={20} /> },

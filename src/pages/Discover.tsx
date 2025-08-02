@@ -164,40 +164,66 @@ const Discover = () => {
               </Button>
             </div>
 
-            <div className="grid gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {outliers.map((video, index) => (
-                <Card key={index} className="bg-tube-dark border-tube-lightgray/20">
-                  <CardContent className="p-6">
-                    <div className="flex gap-4">
-                      <div className="w-48 h-28 bg-tube-gray rounded-lg flex items-center justify-center">
-                        <Video className="h-8 w-8 text-tube-white/50" />
+                <div key={index} className="group cursor-pointer">
+                  <div className="relative bg-tube-dark rounded-lg overflow-hidden border border-tube-lightgray/20 hover:border-tube-red/50 transition-all duration-300">
+                    {/* Performance Badge */}
+                    <div className="absolute top-3 left-3 z-10">
+                      <div className="bg-gradient-to-r from-green-500 to-green-400 text-white text-xs font-bold px-2 py-1 rounded">
+                        &gt;{video.performance}x
                       </div>
-                      <div className="flex-1 space-y-3">
-                        <div>
-                          <h3 className="text-lg font-semibold text-tube-white">{video.title}</h3>
-                          <p className="text-sm text-tube-white/70">{video.channel}</p>
-                        </div>
-                        <div className="flex items-center gap-6">
-                          <div className="text-center">
-                            <p className="text-2xl font-bold text-tube-red">{video.views}</p>
-                            <p className="text-xs text-tube-white/50">Views</p>
-                          </div>
-                          <div className="text-center">
-                            <p className="text-2xl font-bold text-tube-red">{video.vph}</p>
-                            <p className="text-xs text-tube-white/50">VPH</p>
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex items-center justify-between mb-1">
-                              <span className="text-sm text-tube-white/70">Performance</span>
-                              <span className="text-sm font-medium text-tube-white">{video.performance}%</span>
-                            </div>
-                            <Progress value={video.performance} className="h-2" />
-                          </div>
+                    </div>
+                    
+                    {/* VPH Badge */}
+                    <div className="absolute top-3 right-3 z-10">
+                      <div className="bg-tube-darkest/80 backdrop-blur-sm text-tube-white text-xs font-medium px-2 py-1 rounded">
+                        {video.vph} VPH
+                      </div>
+                    </div>
+
+                    {/* Thumbnail */}
+                    <div className="aspect-video bg-gradient-to-br from-tube-gray to-tube-lightgray relative overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <Video className="h-12 w-12 text-tube-white/30" />
+                      </div>
+                      
+                      {/* Play Button Overlay */}
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="bg-tube-red/90 rounded-full p-3">
+                          <Video className="h-6 w-6 text-white fill-current" />
                         </div>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
+
+                    {/* Content */}
+                    <div className="p-4">
+                      <h3 className="text-tube-white font-semibold text-sm line-clamp-2 mb-2 leading-tight">
+                        {video.title}
+                      </h3>
+                      
+                      <div className="flex items-center justify-between text-xs text-tube-white/60">
+                        <span>{video.channel}</span>
+                        <span>{video.views} views</span>
+                      </div>
+
+                      {/* Performance Bar */}
+                      <div className="mt-3">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-xs text-tube-white/50">Performance</span>
+                          <span className="text-xs text-green-400 font-medium">{video.performance}%</span>
+                        </div>
+                        <div className="w-full bg-tube-gray/30 rounded-full h-1.5">
+                          <div 
+                            className="bg-gradient-to-r from-green-500 to-green-400 h-1.5 rounded-full transition-all duration-500"
+                            style={{ width: `${video.performance}%` }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
           </TabsContent>

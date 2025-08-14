@@ -4,6 +4,7 @@ import PageContainer from '@/components/PageContainer';
 import ChannelOverviewCard from '@/components/dashboard/ChannelOverviewCard';
 import { Button } from '@/components/ui/button';
 import { YouTubeChannel } from '@/types/youtube';
+import { Plus } from 'lucide-react';
 
 // YouTube channel data with detailed stats
 const channelsData: YouTubeChannel[] = [
@@ -134,14 +135,28 @@ const Channels = () => {
     window.location.href = `/channels/analytics/${channelId}`;
   };
 
+  const handleAddChannel = () => {
+    // Navigate to add channel page or open dialog
+    window.location.href = '/channels/add';
+  };
+
   return (
     <PageContainer>
       <div className="mb-6">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold text-tube-white">Kanallarım</h1>
-          <Button variant="outline" className="bg-tube-gray/40 text-tube-white border-tube-lightgray/20 hover:bg-tube-gray">
-            Tümünü Görüntüle
-          </Button>
+          <div className="flex gap-3">
+            <Button 
+              onClick={handleAddChannel}
+              className="bg-primary text-primary-foreground hover:bg-primary/90"
+            >
+              <Plus className="h-4 w-4" />
+              Kanal Ekle
+            </Button>
+            <Button variant="outline" className="bg-tube-gray/40 text-tube-white border-tube-lightgray/20 hover:bg-tube-gray">
+              Tümünü Görüntüle
+            </Button>
+          </div>
         </div>
       </div>
       

@@ -262,3 +262,86 @@ export const useTrackedChannels = () => {
     addChannelToFolder
   };
 };
+
+// Master VIPE Hook - Unified API
+export const useVIPE = () => {
+  const ideas = useIdeaGeneration();
+  const titles = useTitleGeneration();
+  const thumbnails = useThumbnailGeneration();
+  const outliers = useOutliers();
+  const niche = useNicheExplorer();
+  const thumbnailSearch = useThumbnailSearch();
+  const similarTopics = useSimilarTopics();
+  const bookmarks = useBookmarks();
+  const trackedChannels = useTrackedChannels();
+
+  return {
+    // Ideas
+    generateIdeas: ideas.generateIdeas,
+    isGeneratingIdeas: ideas.isGenerating,
+
+    // Titles
+    generateTitles: titles.generateTitles,
+    isGeneratingTitles: titles.isGenerating,
+
+    // Thumbnails (Mock implementations for new pages)
+    generateThumbnails: async (params: { prompt: string; style: string; count: number }) => {
+      return Array.from({ length: params.count }, (_, i) => 
+        `https://via.placeholder.com/1280x720/ff6b6b/ffffff?text=Thumbnail+${i + 1}`
+      );
+    },
+    generateThumbnail: thumbnails.generateThumbnail,
+    analyzeThumbnail: thumbnails.analyzeThumbnail,
+    isGeneratingThumbnails: thumbnails.isGenerating,
+
+    // Niche Explorer
+    exploreNiche: async (params: { query: string; category: string; limit: number }) => {
+      return Array.from({ length: Math.min(params.limit, 10) }, (_, i) => ({
+        name: `${params.query} Channel ${i + 1}`,
+        description: `A great channel about ${params.query} with quality content`,
+        subscribers: Math.floor(Math.random() * 1000000) + 10000,
+        totalViews: Math.floor(Math.random() * 10000000) + 100000,
+        joinedDate: '2020',
+        engagement: ['High', 'Medium', 'Very High'][Math.floor(Math.random() * 3)],
+        tags: [params.query, params.category, 'popular']
+      }));
+    },
+    isExploringNiche: niche.isExploring,
+
+    // Outliers
+    getChannelOutliers: outliers.getChannelOutliers,
+    getRandomOutliers: outliers.getRandomOutliers,
+    getShortsOutliers: outliers.getShortsOutliers,
+    isLoadingOutliers: outliers.isLoading,
+    refetchOutliers: outliers.refetch,
+
+    // Thumbnail Search
+    searchThumbnails: thumbnailSearch.searchThumbnails,
+    findSimilarThumbnails: thumbnailSearch.findSimilarThumbnails,
+    isSearchingThumbnails: thumbnailSearch.isSearching,
+
+    // Similar Topics
+    findSimilarTopics: similarTopics.findSimilarTopics,
+    isSearchingSimilarTopics: similarTopics.isSearching,
+
+    // Bookmarks
+    bookmarks: bookmarks.bookmarks,
+    bookmarkFolders: bookmarks.folders,
+    addBookmark: bookmarks.addBookmark,
+    removeBookmark: bookmarks.removeBookmark,
+    createBookmarkFolder: bookmarks.createFolder,
+
+    // Tracked Channels
+    trackedFolders: trackedChannels.trackedFolders,
+    createChannelFolder: trackedChannels.createChannelFolder,
+    addChannelToFolder: trackedChannels.addChannelToFolder,
+
+    // Mock implementations for new features
+    getTrackedChannels: async () => {
+      return [];
+    },
+    trackChannel: async (channelId: string, folderId: string) => {
+      return true;
+    }
+  };
+};

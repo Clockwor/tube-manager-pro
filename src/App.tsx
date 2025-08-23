@@ -22,6 +22,10 @@ import VIPE from "./pages/VIPE";
 import IdeaGenerator from "./pages/vipe/IdeaGenerator";
 import TitleGenerator from "./pages/vipe/TitleGenerator";
 import OutliersHub from "./pages/vipe/OutliersHub";
+import ThumbnailGenerator from "./pages/vipe/ThumbnailGenerator";
+import NicheExplorer from "./pages/vipe/NicheExplorer";
+import TrackedChannels from "./pages/vipe/TrackedChannels";
+import Bookmarks from "./pages/vipe/Bookmarks";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +53,10 @@ const App = () => (
             <Route path="/vipe/ideas" element={<IdeaGenerator />} />
             <Route path="/vipe/titles" element={<TitleGenerator />} />
             <Route path="/vipe/outliers" element={<OutliersHub />} />
+            <Route path="/vipe/thumbnails" element={<ThumbnailGenerator />} />
+            <Route path="/vipe/niche" element={<NicheExplorer />} />
+            <Route path="/vipe/tracked" element={<TrackedChannels />} />
+            <Route path="/vipe/bookmarks" element={<Bookmarks />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

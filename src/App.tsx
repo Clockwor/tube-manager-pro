@@ -18,6 +18,10 @@ import Social from "./pages/Social";
 import Accounts from "./pages/Accounts";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
+import VIPE from "./pages/VIPE";
+import IdeaGenerator from "./pages/vipe/IdeaGenerator";
+import TitleGenerator from "./pages/vipe/TitleGenerator";
+import OutliersHub from "./pages/vipe/OutliersHub";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +45,10 @@ const App = () => (
             <Route path="/social" element={<Social />} />
             <Route path="/accounts" element={<Accounts />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/vipe" element={<VIPE />} />
+            <Route path="/vipe/ideas" element={<IdeaGenerator />} />
+            <Route path="/vipe/titles" element={<TitleGenerator />} />
+            <Route path="/vipe/outliers" element={<OutliersHub />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

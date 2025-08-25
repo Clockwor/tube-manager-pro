@@ -26,6 +26,7 @@ import ThumbnailGenerator from "./pages/vipe/ThumbnailGenerator";
 import NicheExplorer from "./pages/vipe/NicheExplorer";
 import TrackedChannels from "./pages/vipe/TrackedChannels";
 import Bookmarks from "./pages/vipe/Bookmarks";
+import AIVideoInsights from "./pages/vipe/AIVideoInsights";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +58,7 @@ const App = () => (
             <Route path="/vipe/niche" element={<NicheExplorer />} />
             <Route path="/vipe/tracked" element={<TrackedChannels />} />
             <Route path="/vipe/bookmarks" element={<Bookmarks />} />
+            <Route path="/vipe/ai-insights" element={<AIVideoInsights />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -13,7 +13,8 @@ import {
   Bookmark, 
   Eye, 
   Copy, 
-  Target, 
+  Target,
+  Brain,
   LayoutGrid, 
   Filter, 
   Shuffle, 
@@ -166,6 +167,15 @@ const vipeFeatures: VIPEFeature[] = [
     icon: <PlayCircle className="h-6 w-6" />,
     route: '/vipe/shorts-thumbnails',
     status: 'beta',
+    category: 'analyze'
+  },
+  {
+    id: 'ai-video-insights',
+    title: 'AI Video Insights',
+    description: 'Analyze YouTube videos with artificial intelligence',
+    icon: <Brain className="h-6 w-6" />,
+    route: '/vipe/ai-insights',
+    status: 'active',
     category: 'analyze'
   }
 ];

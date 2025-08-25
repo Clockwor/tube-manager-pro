@@ -123,14 +123,14 @@ const OutliersHub = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium">Duration</label>
-                <Select value={filters.duration || ''} onValueChange={(value) => 
-                  setFilters(prev => ({ ...prev, duration: value as any }))
+                <Select value={filters.duration || 'any'} onValueChange={(value) => 
+                  setFilters(prev => ({ ...prev, duration: value === 'any' ? undefined : value as any }))
                 }>
                   <SelectTrigger>
                     <SelectValue placeholder="Any duration" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Any duration</SelectItem>
+                    <SelectItem value="any">Any duration</SelectItem>
                     <SelectItem value="short">Short (&lt; 4 min)</SelectItem>
                     <SelectItem value="medium">Medium (4-20 min)</SelectItem>
                     <SelectItem value="long">Long (&gt; 20 min)</SelectItem>

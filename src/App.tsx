@@ -28,6 +28,7 @@ import TrackedChannels from "./pages/vipe/TrackedChannels";
 import Bookmarks from "./pages/vipe/Bookmarks";
 import AIVideoInsights from "./pages/vipe/AIVideoInsights";
 import SimilarTopics from "./pages/vipe/SimilarTopics";
+import Filters from "./pages/vipe/Filters";
 
 const queryClient = new QueryClient();
 
@@ -61,6 +62,7 @@ const App = () => (
             <Route path="/vipe/bookmarks" element={<Bookmarks />} />
             <Route path="/vipe/ai-insights" element={<AIVideoInsights />} />
             <Route path="/vipe/similar-topics" element={<SimilarTopics />} />
+            <Route path="/vipe/filters" element={<Filters />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

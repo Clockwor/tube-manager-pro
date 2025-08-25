@@ -19,7 +19,8 @@ import {
   Filter, 
   Shuffle, 
   Zap,
-  PlayCircle
+  PlayCircle,
+  Layers
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 

@@ -30,6 +30,7 @@ import AIVideoInsights from "./pages/vipe/AIVideoInsights";
 import SimilarTopics from "./pages/vipe/SimilarTopics";
 import Filters from "./pages/vipe/Filters";
 import VisionBoards from "./pages/vipe/VisionBoards";
+import SimilarThumbnails from "./pages/vipe/SimilarThumbnails";
 
 const queryClient = new QueryClient();
 
@@ -65,6 +66,7 @@ const App = () => (
             <Route path="/vipe/similar-topics" element={<SimilarTopics />} />
             <Route path="/vipe/filters" element={<Filters />} />
             <Route path="/vipe/vision-boards" element={<VisionBoards />} />
+            <Route path="/vipe/similar-thumbnails" element={<SimilarThumbnails />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

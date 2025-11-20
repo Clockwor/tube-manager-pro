@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Lightbulb, RefreshCw, Target, Download } from 'lucide-react';
+import { Lightbulb, RefreshCw, Target } from 'lucide-react';
 import { useIdeaGeneration, useBookmarks } from '@/hooks/useVIPE';
 import { IdeaGeneration } from '@/types/vipe';
 import { toast } from 'sonner';
@@ -24,14 +24,16 @@ const IdeaGenerator = () => {
 
   const handleGenerateIdeas = async () => {
     if (!inputUrl.trim()) {
-      toast.error('Please enter a YouTube URL');
+      toast.error('Lütfen bir YouTube URL\'si girin');
       return;
     }
 
     try {
       const newIdeas = await generateIdeas(inputUrl, 10);
       setIdeas(newIdeas);
+      toast.success(`${newIdeas.length} fikir oluşturuldu!`);
     } catch (error) {
+      toast.error('Fikir oluşturulurken hata oluştu');
       console.error('Failed to generate ideas:', error);
     }
   };
@@ -90,12 +92,12 @@ const IdeaGenerator = () => {
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center gap-3">
-          <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20">
-            <Lightbulb className="h-6 w-6 text-green-400" />
+          <div className="p-3 rounded-lg bg-[hsl(var(--success-light))] border border-[hsl(var(--success))]">
+            <Lightbulb className="h-6 w-6 text-[hsl(var(--success))]" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Idea Generator</h1>
-            <p className="text-muted-foreground">Generate viral content ideas from any YouTube video or channel</p>
+            <h1 className="text-3xl font-bold text-foreground">Fikir Üretici</h1>
+            <p className="text-muted-foreground">YouTube videosu veya kanalından viral içerik fikirleri üretin</p>
           </div>
         </div>
 
@@ -104,10 +106,10 @@ const IdeaGenerator = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Target className="h-5 w-5" />
-              Input Source
+              Kaynak Girişi
             </CardTitle>
             <CardDescription>
-              Enter a YouTube video URL or channel URL to analyze and generate inspired content ideas
+              Analiz etmek ve ilham verici içerik fikirleri üretmek için YouTube video veya kanal URL'si girin
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -115,10 +117,11 @@ const IdeaGenerator = () => {
               <Label htmlFor="url-input">YouTube URL</Label>
               <Input
                 id="url-input"
-                placeholder="https://youtube.com/watch?v=... or https://youtube.com/@channelname"
+                placeholder="https://youtube.com/watch?v=... veya https://youtube.com/@kanaladi"
                 value={inputUrl}
                 onChange={(e) => setInputUrl(e.target.value)}
                 className="font-mono text-sm"
+                onKeyPress={(e) => e.key === 'Enter' && handleGenerateIdeas()}
               />
             </div>
             <Button 
@@ -129,12 +132,12 @@ const IdeaGenerator = () => {
               {isGenerating ? (
                 <>
                   <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                  Generating Ideas...
+                  Fikirler Üretiliyor...
                 </>
               ) : (
                 <>
                   <Lightbulb className="h-4 w-4 mr-2" />
-                  Generate Viral Ideas
+                  Viral Fikirler Üret
                 </>
               )}
             </Button>
@@ -142,75 +145,60 @@ const IdeaGenerator = () => {
         </Card>
 
         {/* Results */}
-        {ideas.length > 0 && (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold">Generated Ideas</h2>
-              <Badge variant="outline" className="bg-green-500/10 text-green-400 border-green-500/20">
-                {ideas.length} Ideas Generated
-              </Badge>
-            </div>
-
-            <Tabs defaultValue="grid" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="grid">Grid View</TabsTrigger>
-                <TabsTrigger value="detailed">Detailed View</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="grid" className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {ideas.map((idea) => (
-                    <Card 
-                      key={idea.id} 
-                      className="hover:shadow-lg transition-all duration-300 cursor-pointer hover:border-primary/50"
-                      onClick={() => setSelectedIdea(idea)}
-                    >
-                      <CardHeader className="pb-3">
-                        <div className="flex items-start justify-between">
-                          <CardTitle className="text-lg leading-tight">{idea.title}</CardTitle>
-                          <div className="flex gap-1">
-                            <Badge variant="outline" className={getConfidenceColor(idea.confidenceScore)}>
-                              {Math.round(idea.confidenceScore)}%
-                            </Badge>
-                          </div>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="space-y-3">
-                        <p className="text-sm text-muted-foreground line-clamp-3">
-                          {idea.description}
-                        </p>
-                        
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-muted-foreground">Viral Potential:</span>
-                          <span className={`font-semibold ${getViralPotentialColor(idea.estimatedViralPotential)}`}>
-                            {Math.round(idea.estimatedViralPotential)}%
-                          </span>
-                        </div>
-
-                        <div className="flex flex-wrap gap-1">
-                          {idea.suggestedTags.slice(0, 3).map((tag) => (
-                            <Badge key={tag} variant="secondary" className="text-xs">
-                              {tag}
-                            </Badge>
-                          ))}
-                        </div>
-
-                        <div className="flex gap-2 pt-2">
-                          <Button size="sm" variant="outline" onClick={(e) => {
-                            e.stopPropagation();
-                            copyToClipboard(idea.title);
-                          }}>
-                            <Copy className="h-3 w-3" />
-                          </Button>
-                          <Button size="sm" variant="outline" onClick={(e) => {
-                            e.stopPropagation();
-                            handleBookmarkIdea(idea);
-                          }}>
-                            <Bookmark className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
+        {isGenerating ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {[1, 2, 3, 4].map((i) => (
+              <SkeletonCard key={i} />
+            ))}
+          </div>
+        ) : ideas.length === 0 ? (
+          <EmptyState
+            icon={Lightbulb}
+            title="Henüz Fikir Üretilmedi"
+            description="Bir YouTube URL'si girin ve viral içerik fikirleri oluşturmaya başlayın"
+            actionLabel="Örnek URL Kullan"
+            onAction={() => setInputUrl('https://youtube.com/watch?v=dQw4w9WgXcQ')}
+          />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {ideas.map((idea) => (
+              <ContentCard
+                key={idea.id}
+                title={idea.title}
+                description={idea.description}
+                score={idea.confidenceScore}
+                scoreLabel="Güven"
+                tags={idea.suggestedTags}
+                isSelected={selectedIdeas.has(idea.id)}
+                rating={ratings[idea.id] || 0}
+                onClick={() => toggleSelect(idea.id)}
+                onCopy={() => copyToClipboard(`${idea.title}\n\n${idea.description}\n\nThumbnail: ${idea.thumbnailConcept}`)}
+                onBookmark={() => {
+                  addBookmark({
+                    type: 'idea',
+                    content: idea,
+                    notes: `Generated from: ${inputUrl}`
+                  });
+                  toast.success('Fikir kaydedildi!');
+                }}
+                onRate={(rating) => setRatings(prev => ({ ...prev, [idea.id]: rating }))}
+              >
+                <div className="p-4 rounded-lg bg-secondary/50 border border-border">
+                  <p className="text-sm text-muted-foreground mb-1 font-medium">Thumbnail Konsepti:</p>
+                  <p className="text-sm text-foreground">{idea.thumbnailConcept}</p>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4 p-4 rounded-lg bg-secondary/30">
+                  <div>
+                    <p className="text-xs text-muted-foreground mb-1">Niche</p>
+                    <p className="text-sm font-medium text-foreground">{idea.targetNiche}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground mb-1">Viral Potansiyel</p>
+                    <p className="text-sm font-bold text-foreground">{idea.estimatedViralPotential}%</p>
+                  </div>
+                </div>
+              </ContentCard>
             ))}
           </div>
         )}
@@ -223,97 +211,6 @@ const IdeaGenerator = () => {
           onExport={handleExport}
           onClear={() => setSelectedIdeas(new Set())}
         />
-              </TabsContent>
-
-              <TabsContent value="detailed" className="space-y-4">
-                {ideas.map((idea) => (
-                  <Card key={idea.id} className="border-l-4 border-l-primary">
-                    <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <div className="space-y-2">
-                          <CardTitle className="text-xl">{idea.title}</CardTitle>
-                          <div className="flex items-center gap-4 text-sm">
-                            <Badge variant="outline" className={getConfidenceColor(idea.confidenceScore)}>
-                              <TrendingUp className="h-3 w-3 mr-1" />
-                              Confidence: {Math.round(idea.confidenceScore)}%
-                            </Badge>
-                            <Badge variant="outline" className="bg-purple-500/10 text-purple-400 border-purple-500/20">
-                              <Zap className="h-3 w-3 mr-1" />
-                              Viral: {Math.round(idea.estimatedViralPotential)}%
-                            </Badge>
-                            <Badge variant="outline">
-                              {idea.targetNiche}
-                            </Badge>
-                          </div>
-                        </div>
-                        <div className="flex gap-2">
-                          <Button size="sm" variant="outline" onClick={() => copyToClipboard(idea.title)}>
-                            <Copy className="h-3 w-3" />
-                          </Button>
-                          <Button size="sm" variant="outline" onClick={() => handleBookmarkIdea(idea)}>
-                            <Bookmark className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <p className="text-muted-foreground">{idea.description}</p>
-                      
-                      <div className="space-y-2">
-                        <Label className="text-sm font-medium">Thumbnail Concept</Label>
-                        <p className="text-sm bg-muted/50 p-3 rounded-lg">{idea.thumbnailConcept}</p>
-                      </div>
-
-                      <div className="flex flex-wrap gap-2">
-                        {idea.suggestedTags.map((tag) => (
-                          <Badge key={tag} variant="secondary">
-                            #{tag}
-                          </Badge>
-                        ))}
-                      </div>
-
-                      <div className="text-xs text-muted-foreground flex items-center gap-2">
-                        <ExternalLink className="h-3 w-3" />
-                        Inspired by: {idea.inspirationSource}
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </TabsContent>
-            </Tabs>
-          </div>
-        )}
-
-        {/* Detailed Modal for Selected Idea */}
-        {selectedIdea && (
-          <Card className="border-2 border-primary">
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <CardTitle className="text-xl">{selectedIdea.title}</CardTitle>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={() => setSelectedIdea(null)}
-                >
-                  ✕
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p>{selectedIdea.description}</p>
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <Label>Target Niche</Label>
-                  <p className="font-medium">{selectedIdea.targetNiche}</p>
-                </div>
-                <div>
-                  <Label>Confidence Score</Label>
-                  <p className="font-medium">{Math.round(selectedIdea.confidenceScore)}%</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
       </div>
     </PageContainer>
   );

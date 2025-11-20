@@ -4,17 +4,20 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Lightbulb, Copy, Bookmark, RefreshCw, ExternalLink, Target, TrendingUp, Zap } from 'lucide-react';
+import { Lightbulb, RefreshCw, Target, Download } from 'lucide-react';
 import { useIdeaGeneration, useBookmarks } from '@/hooks/useVIPE';
 import { IdeaGeneration } from '@/types/vipe';
 import { toast } from 'sonner';
+import { ContentCard } from '@/components/vipe/ContentCard';
+import { EmptyState } from '@/components/vipe/EmptyState';
+import { SkeletonCard } from '@/components/vipe/SkeletonCard';
+import { BatchActions } from '@/components/vipe/BatchActions';
 
 const IdeaGenerator = () => {
   const [inputUrl, setInputUrl] = useState('');
   const [ideas, setIdeas] = useState<IdeaGeneration[]>([]);
-  const [selectedIdea, setSelectedIdea] = useState<IdeaGeneration | null>(null);
+  const [selectedIdeas, setSelectedIdeas] = useState<Set<string>>(new Set());
+  const [ratings, setRatings] = useState<Record<string, number>>({});
   
   const { generateIdeas, isGenerating } = useIdeaGeneration();
   const { addBookmark } = useBookmarks();
@@ -33,29 +36,53 @@ const IdeaGenerator = () => {
     }
   };
 
-  const handleBookmarkIdea = (idea: IdeaGeneration) => {
-    addBookmark({
-      type: 'idea',
-      content: idea,
-      notes: `Generated from: ${inputUrl}`
+  const toggleSelect = (ideaId: string) => {
+    setSelectedIdeas(prev => {
+      const next = new Set(prev);
+      if (next.has(ideaId)) {
+        next.delete(ideaId);
+      } else {
+        next.add(ideaId);
+      }
+      return next;
     });
+  };
+
+  const handleCopyAll = () => {
+    const selected = ideas.filter(i => selectedIdeas.has(i.id));
+    const text = selected.map(i => `${i.title}\n${i.description}`).join('\n\n');
+    navigator.clipboard.writeText(text);
+    toast.success(`${selected.length} fikir kopyalandı!`);
+  };
+
+  const handleBookmarkAll = () => {
+    const selected = ideas.filter(i => selectedIdeas.has(i.id));
+    selected.forEach(idea => {
+      addBookmark({
+        type: 'idea',
+        content: idea,
+        notes: `Generated from: ${inputUrl}`
+      });
+    });
+    toast.success(`${selected.length} fikir kaydedildi!`);
+    setSelectedIdeas(new Set());
+  };
+
+  const handleExport = () => {
+    const selected = ideas.filter(i => selectedIdeas.has(i.id));
+    const data = JSON.stringify(selected, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `vipe-ideas-${Date.now()}.json`;
+    a.click();
+    toast.success('Dışa aktarıldı!');
   };
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    toast.success('Copied to clipboard!');
-  };
-
-  const getViralPotentialColor = (score: number) => {
-    if (score >= 80) return 'text-green-400';
-    if (score >= 60) return 'text-yellow-400';
-    return 'text-red-400';
-  };
-
-  const getConfidenceColor = (score: number) => {
-    if (score >= 85) return 'bg-green-500/10 text-green-400 border-green-500/20';
-    if (score >= 70) return 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20';
-    return 'bg-red-500/10 text-red-400 border-red-500/20';
+    toast.success('Panoya kopyalandı!');
   };
 
   return (
@@ -184,8 +211,18 @@ const IdeaGenerator = () => {
                         </div>
                       </CardContent>
                     </Card>
-                  ))}
-                </div>
+            ))}
+          </div>
+        )}
+
+        {/* Batch Actions */}
+        <BatchActions
+          selectedCount={selectedIdeas.size}
+          onCopyAll={handleCopyAll}
+          onBookmarkAll={handleBookmarkAll}
+          onExport={handleExport}
+          onClear={() => setSelectedIdeas(new Set())}
+        />
               </TabsContent>
 
               <TabsContent value="detailed" className="space-y-4">

@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/select';
 import { 
   Plus, Search, Grid3X3, List, 
-  TrendingUp, Globe, Tag, X, SlidersHorizontal
+  TrendingUp, Globe, Tag, X, SlidersHorizontal, ArrowUpDown, ArrowUp, ArrowDown
 } from 'lucide-react';
 import { YouTubeChannel, DashboardStats as DashboardStatsType, ActivityItem } from '@/types/youtube';
 
@@ -41,6 +41,21 @@ const availableTags = [
   { id: 'music', label: 'Müzik', color: 'bg-red-500/20 text-red-400 border-red-500/30' },
   { id: 'sports', label: 'Spor', color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' },
   { id: 'news', label: 'Haber', color: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' },
+];
+
+// Sıralama seçenekleri
+const sortOptions = [
+  { id: 'subscribers_desc', label: 'Abone (Yüksek → Düşük)', icon: ArrowDown },
+  { id: 'subscribers_asc', label: 'Abone (Düşük → Yüksek)', icon: ArrowUp },
+  { id: 'views_desc', label: 'Görüntülenme (Yüksek → Düşük)', icon: ArrowDown },
+  { id: 'views_asc', label: 'Görüntülenme (Düşük → Yüksek)', icon: ArrowUp },
+  { id: 'growth_desc', label: 'Büyüme Oranı (Yüksek → Düşük)', icon: ArrowDown },
+  { id: 'growth_asc', label: 'Büyüme Oranı (Düşük → Yüksek)', icon: ArrowUp },
+  { id: 'engagement_desc', label: 'Etkileşim (Yüksek → Düşük)', icon: ArrowDown },
+  { id: 'engagement_asc', label: 'Etkileşim (Düşük → Yüksek)', icon: ArrowUp },
+  { id: 'videos_desc', label: 'Video Sayısı (Yüksek → Düşük)', icon: ArrowDown },
+  { id: 'name_asc', label: 'İsim (A → Z)', icon: ArrowUp },
+  { id: 'name_desc', label: 'İsim (Z → A)', icon: ArrowDown },
 ];
 
 // Mock data - daha fazla kanal ve etiketler eklendi
@@ -358,7 +373,9 @@ const Index = () => {
   const [selectedCountry, setSelectedCountry] = useState<string>('all');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [showFilters, setShowFilters] = useState(false);
+  const [sortBy, setSortBy] = useState<string>('subscribers_desc');
 
+  // Filtreleme
   const filteredChannels = channels.filter(channel => {
     const matchesSearch = channel.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          channel.handle.toLowerCase().includes(searchTerm.toLowerCase());
@@ -373,6 +390,38 @@ const Index = () => {
                        selectedTags.some(tag => channel.tags?.includes(tag));
     
     return matchesSearch && matchesFilter && matchesCountry && matchesTags;
+  });
+
+  // Sıralama
+  const sortedChannels = [...filteredChannels].sort((a, b) => {
+    switch (sortBy) {
+      case 'subscribers_desc':
+        return b.subscriberCount - a.subscriberCount;
+      case 'subscribers_asc':
+        return a.subscriberCount - b.subscriberCount;
+      case 'views_desc':
+        return b.totalViews - a.totalViews;
+      case 'views_asc':
+        return a.totalViews - b.totalViews;
+      case 'growth_desc':
+        return b.growth.subscribers.percentage - a.growth.subscribers.percentage;
+      case 'growth_asc':
+        return a.growth.subscribers.percentage - b.growth.subscribers.percentage;
+      case 'engagement_desc':
+        return b.stats.engagementRate - a.stats.engagementRate;
+      case 'engagement_asc':
+        return a.stats.engagementRate - b.stats.engagementRate;
+      case 'videos_desc':
+        return b.videoCount - a.videoCount;
+      case 'videos_asc':
+        return a.videoCount - b.videoCount;
+      case 'name_asc':
+        return a.name.localeCompare(b.name, 'tr');
+      case 'name_desc':
+        return b.name.localeCompare(a.name, 'tr');
+      default:
+        return 0;
+    }
   });
 
   const handleManageChannel = (channelId: string) => {
@@ -512,6 +561,28 @@ const Index = () => {
                   </SelectContent>
                 </Select>
 
+                {/* Sort Dropdown */}
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger className="w-[200px] bg-tube-dark border-tube-lightgray/30 text-tube-white">
+                    <ArrowUpDown className="h-4 w-4 mr-2" />
+                    <SelectValue placeholder="Sırala" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-tube-dark border-tube-lightgray/30">
+                    {sortOptions.map(option => (
+                      <SelectItem 
+                        key={option.id} 
+                        value={option.id}
+                        className="text-tube-white hover:bg-tube-gray/40"
+                      >
+                        <div className="flex items-center gap-2">
+                          <option.icon className="h-3 w-3" />
+                          {option.label}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
                 {/* Toggle Advanced Filters */}
                 <Button
                   variant="outline"
@@ -629,10 +700,15 @@ const Index = () => {
               </div>
             )}
 
-            {/* Results Count */}
-            <div className="text-sm text-tube-white/60">
-              {filteredChannels.length} kanal gösteriliyor
-              {filteredChannels.length !== channels.length && ` (toplam ${channels.length})`}
+            {/* Results Count & Sort Info */}
+            <div className="flex items-center justify-between text-sm text-tube-white/60">
+              <span>
+                {sortedChannels.length} kanal gösteriliyor
+                {sortedChannels.length !== channels.length && ` (toplam ${channels.length})`}
+              </span>
+              <span className="hidden md:inline">
+                Sıralama: {sortOptions.find(o => o.id === sortBy)?.label}
+              </span>
             </div>
           </div>
 
@@ -642,7 +718,7 @@ const Index = () => {
               ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' 
               : 'grid-cols-1'
           }`}>
-            {filteredChannels.map((channel) => (
+            {sortedChannels.map((channel) => (
               <ChannelOverviewCard
                 key={channel.id}
                 channel={channel}
@@ -652,7 +728,7 @@ const Index = () => {
             ))}
           </div>
 
-          {filteredChannels.length === 0 && (
+          {sortedChannels.length === 0 && (
             <div className="text-center py-12 bg-tube-gray/20 rounded-lg border border-tube-lightgray/10">
               <div className="text-tube-white/60 mb-4">
                 {searchTerm || activeFilterCount > 0 

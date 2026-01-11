@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import PageContainer from '@/components/PageContainer';
@@ -9,11 +8,19 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Users, Eye, Play, ChevronLeft, BarChart3, 
-  Settings, Video, Target, TrendingUp
+  Settings, Video, Target, TrendingUp, ExternalLink, Radio
 } from 'lucide-react';
+import { toast } from 'sonner';
 import VideoManagement from '@/components/dashboard/VideoManagement';
 import ChannelAnalytics from '@/components/dashboard/ChannelAnalytics';
 import ChannelSettings from '@/components/dashboard/ChannelSettings';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 // Example channel data
 const channelData = {
@@ -100,12 +107,34 @@ const countryFlags: Record<string, string> = {
 const ChannelManage = () => {
   const navigate = useNavigate();
   const { channelId } = useParams<{ channelId: string }>();
+  const [showLiveDialog, setShowLiveDialog] = useState(false);
   
   // Using hardcoded data since we don't have actual API integration
   const channel = channelData;
   
   const handleBackClick = () => {
     navigate('/channels');
+  };
+
+  const handleOpenStudio = () => {
+    toast.success('YouTube Studio açılıyor...', {
+      description: 'Yeni sekmede YouTube Studio açılacak'
+    });
+    // Simulate opening YouTube Studio
+    setTimeout(() => {
+      window.open('https://studio.youtube.com', '_blank');
+    }, 500);
+  };
+
+  const handleStartLive = () => {
+    setShowLiveDialog(true);
+  };
+
+  const handleConfirmLive = () => {
+    setShowLiveDialog(false);
+    toast.success('Canlı yayın başlatılıyor!', {
+      description: 'Canlı yayın kontrol paneli açılıyor...'
+    });
   };
 
   const formatNumber = (num: number) => {
@@ -170,13 +199,17 @@ const ChannelManage = () => {
               <div className="flex gap-2">
                 <Button 
                   variant="outline" 
-                  className="bg-tube-gray/40 text-tube-white border-tube-lightgray/20 hover:bg-tube-gray"
+                  className="bg-tube-gray/40 text-tube-white border-tube-lightgray/20 hover:bg-tube-gray gap-2"
+                  onClick={handleOpenStudio}
                 >
+                  <ExternalLink className="h-4 w-4" />
                   Studio'yu Aç
                 </Button>
                 <Button 
-                  className="bg-tube-red hover:bg-tube-darkred text-white"
+                  className="bg-tube-red hover:bg-tube-darkred text-white gap-2"
+                  onClick={handleStartLive}
                 >
+                  <Radio className="h-4 w-4" />
                   Canlı Yayın
                 </Button>
               </div>
@@ -257,6 +290,54 @@ const ChannelManage = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Live Stream Dialog */}
+      <Dialog open={showLiveDialog} onOpenChange={setShowLiveDialog}>
+        <DialogContent className="bg-tube-dark border-tube-lightgray/30">
+          <DialogHeader>
+            <DialogTitle className="text-tube-white flex items-center gap-2">
+              <Radio className="h-5 w-5 text-tube-red" />
+              Canlı Yayın Başlat
+            </DialogTitle>
+            <DialogDescription className="text-tube-white/70">
+              Canlı yayın başlatmak üzeresiniz. Yayın ayarlarınızı kontrol edin.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="p-4 bg-tube-gray/40 rounded-lg">
+              <p className="text-tube-white font-medium mb-2">Yayın Bilgileri</p>
+              <div className="space-y-2 text-sm text-tube-white/70">
+                <p>Kanal: {channel.name}</p>
+                <p>Kalite: 1080p HD</p>
+                <p>Gizlilik: Herkese Açık</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+              <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse" />
+              <p className="text-yellow-200 text-sm">Yayın başladığında abonelerinize bildirim gönderilecek</p>
+            </div>
+          </div>
+          
+          <div className="flex justify-end gap-2">
+            <Button 
+              variant="outline" 
+              onClick={() => setShowLiveDialog(false)}
+              className="border-tube-lightgray/30 text-tube-white"
+            >
+              İptal
+            </Button>
+            <Button 
+              onClick={handleConfirmLive}
+              className="bg-tube-red hover:bg-tube-darkred text-white gap-2"
+            >
+              <Radio className="h-4 w-4" />
+              Yayını Başlat
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </PageContainer>
   );
 };

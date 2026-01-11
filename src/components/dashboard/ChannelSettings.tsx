@@ -13,6 +13,7 @@ import {
   Users, Lock, Eye, Camera, Palette, Link
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { toast } from 'sonner';
 
 const ChannelSettings = () => {
   const [channelData, setChannelData] = useState({
@@ -46,8 +47,21 @@ const ChannelSettings = () => {
   });
 
   const handleSaveChanges = () => {
-    // Save functionality would go here
-    console.log('Saving channel settings...', { channelData, privacySettings, monetizationSettings });
+    toast.success('Ayarlar kaydedildi!', {
+      description: 'Kanal ayarlarınız başarıyla güncellendi.'
+    });
+  };
+
+  const handleUploadAvatar = () => {
+    toast.info('Profil resmi yükleniyor...', {
+      description: 'Dosya seçim penceresi açılıyor.'
+    });
+  };
+
+  const handleUploadBanner = () => {
+    toast.info('Banner yükleniyor...', {
+      description: 'Dosya seçim penceresi açılıyor.'
+    });
   };
 
   return (
@@ -206,7 +220,11 @@ const ChannelSettings = () => {
                         </AvatarFallback>
                       </Avatar>
                       <div className="space-y-2">
-                        <Button variant="outline" className="border-tube-lightgray/30 text-tube-white">
+                        <Button 
+                          variant="outline" 
+                          className="border-tube-lightgray/30 text-tube-white"
+                          onClick={handleUploadAvatar}
+                        >
                           <Upload className="h-4 w-4 mr-2" />
                           Değiştir
                         </Button>
@@ -221,7 +239,11 @@ const ChannelSettings = () => {
                       <div className="w-full h-24 bg-tube-gray/40 border border-tube-lightgray/30 rounded-lg flex items-center justify-center">
                         <Camera className="h-8 w-8 text-tube-white/60" />
                       </div>
-                      <Button variant="outline" className="border-tube-lightgray/30 text-tube-white">
+                      <Button 
+                        variant="outline" 
+                        className="border-tube-lightgray/30 text-tube-white"
+                        onClick={handleUploadBanner}
+                      >
                         <Upload className="h-4 w-4 mr-2" />
                         Banner Yükle
                       </Button>

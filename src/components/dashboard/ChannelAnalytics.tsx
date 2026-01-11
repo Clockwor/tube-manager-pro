@@ -5,9 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   TrendingUp, TrendingDown, Users, Eye, Play, Clock,
-  Calendar, Target, Award, BarChart3, PieChart, LineChart
+  Calendar, Target, Award, BarChart3, PieChart, LineChart, Download
 } from 'lucide-react';
-import { LineChart as RechartsLineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart as RechartsBarChart, Bar, PieChart as RechartsPieChart, Cell } from 'recharts';
+import { toast } from 'sonner';
+import { LineChart as RechartsLineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart as RechartsBarChart, Bar, Pie, PieChart as RechartsPieChart, Cell, Legend } from 'recharts';
 
 const analyticsData = {
   overview: {
@@ -69,6 +70,21 @@ const ChannelAnalytics = () => {
     return value >= 0 ? 'text-green-500' : 'text-red-500';
   };
 
+  const handleDownloadReport = () => {
+    toast.success('Rapor indiriliyor...', {
+      description: 'Analitik raporu PDF olarak hazırlanıyor.'
+    });
+  };
+
+  const handleTimeRangeChange = (value: string) => {
+    setTimeRange(value);
+    toast.info(`Zaman aralığı değiştirildi: ${
+      value === '7d' ? 'Son 7 Gün' : 
+      value === '30d' ? 'Son 30 Gün' : 
+      value === '90d' ? 'Son 90 Gün' : 'Son 1 Yıl'
+    }`);
+  };
+
   return (
     <div className="space-y-6">
       {/* Analytics Header */}
@@ -77,18 +93,23 @@ const ChannelAnalytics = () => {
           <div className="flex items-center justify-between">
             <CardTitle className="text-tube-white text-xl">Kanal Analitikleri</CardTitle>
             <div className="flex items-center gap-2">
-              <Select value={timeRange} onValueChange={setTimeRange}>
+              <Select value={timeRange} onValueChange={handleTimeRangeChange}>
                 <SelectTrigger className="w-32 bg-tube-gray border-tube-lightgray/30 text-tube-white">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-tube-dark border-tube-lightgray/30">
                   <SelectItem value="7d">Son 7 Gün</SelectItem>
                   <SelectItem value="30d">Son 30 Gün</SelectItem>
                   <SelectItem value="90d">Son 90 Gün</SelectItem>
                   <SelectItem value="1y">Son 1 Yıl</SelectItem>
                 </SelectContent>
               </Select>
-              <Button variant="outline" className="border-tube-lightgray/30 text-tube-white">
+              <Button 
+                variant="outline" 
+                className="border-tube-lightgray/30 text-tube-white hover:bg-tube-gray/50"
+                onClick={handleDownloadReport}
+              >
+                <Download className="h-4 w-4 mr-2" />
                 Rapor İndir
               </Button>
             </div>
@@ -98,7 +119,8 @@ const ChannelAnalytics = () => {
 
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="bg-tube-gray/40 border-tube-lightgray/30">
+        <Card className="bg-tube-gray/40 border-tube-lightgray/30 hover:bg-tube-gray/60 transition-colors cursor-pointer"
+          onClick={() => toast.info('Görüntülenme detayları yükleniyor...')}>
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -118,7 +140,8 @@ const ChannelAnalytics = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-tube-gray/40 border-tube-lightgray/30">
+        <Card className="bg-tube-gray/40 border-tube-lightgray/30 hover:bg-tube-gray/60 transition-colors cursor-pointer"
+          onClick={() => toast.info('Abone detayları yükleniyor...')}>
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -138,7 +161,8 @@ const ChannelAnalytics = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-tube-gray/40 border-tube-lightgray/30">
+        <Card className="bg-tube-gray/40 border-tube-lightgray/30 hover:bg-tube-gray/60 transition-colors cursor-pointer"
+          onClick={() => toast.info('Video detayları yükleniyor...')}>
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -154,7 +178,8 @@ const ChannelAnalytics = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-tube-gray/40 border-tube-lightgray/30">
+        <Card className="bg-tube-gray/40 border-tube-lightgray/30 hover:bg-tube-gray/60 transition-colors cursor-pointer"
+          onClick={() => toast.info('İzlenme süresi detayları yükleniyor...')}>
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -184,7 +209,7 @@ const ChannelAnalytics = () => {
                 <SelectTrigger className="w-32 bg-tube-gray border-tube-lightgray/30 text-tube-white">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-tube-dark border-tube-lightgray/30">
                   <SelectItem value="views">Görüntülenme</SelectItem>
                   <SelectItem value="subscribers">Abone</SelectItem>
                   <SelectItem value="both">İkisi</SelectItem>
@@ -237,24 +262,38 @@ const ChannelAnalytics = () => {
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <RechartsPieChart>
-                <RechartsPieChart data={analyticsData.audienceData}>
+                <Pie
+                  data={analyticsData.audienceData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={100}
+                  paddingAngle={5}
+                  dataKey="value"
+                >
                   {analyticsData.audienceData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
-                </RechartsPieChart>
+                </Pie>
                 <Tooltip 
                   contentStyle={{ 
                     backgroundColor: '#1F2937', 
                     border: '1px solid #374151',
                     borderRadius: '8px',
                     color: '#F9FAFB'
-                  }} 
+                  }}
+                  formatter={(value: number) => [`${value}%`, 'Yüzde']}
                 />
+                <Legend />
               </RechartsPieChart>
             </ResponsiveContainer>
             <div className="grid grid-cols-2 gap-2 mt-4">
               {analyticsData.audienceData.map((item, index) => (
-                <div key={index} className="flex items-center gap-2">
+                <div 
+                  key={index} 
+                  className="flex items-center gap-2 p-2 rounded-lg hover:bg-tube-gray/30 cursor-pointer transition-colors"
+                  onClick={() => toast.info(`${item.name} yaş grubu: %${item.value}`)}
+                >
                   <div 
                     className="w-3 h-3 rounded-full" 
                     style={{ backgroundColor: item.color }}
@@ -277,7 +316,11 @@ const ChannelAnalytics = () => {
           <CardContent>
             <div className="space-y-4">
               {analyticsData.topVideos.map((video, index) => (
-                <div key={index} className="flex items-center justify-between p-3 bg-tube-gray/40 rounded-lg">
+                <div 
+                  key={index} 
+                  className="flex items-center justify-between p-3 bg-tube-gray/40 rounded-lg hover:bg-tube-gray/60 cursor-pointer transition-colors"
+                  onClick={() => toast.info(`"${video.title}" video analitikleri açılıyor...`)}
+                >
                   <div className="flex items-center gap-3">
                     <Badge className="bg-tube-red text-white">{index + 1}</Badge>
                     <div>
@@ -303,7 +346,11 @@ const ChannelAnalytics = () => {
           <CardContent>
             <div className="space-y-4">
               {analyticsData.geoData.map((country, index) => (
-                <div key={index} className="flex items-center justify-between">
+                <div 
+                  key={index} 
+                  className="flex items-center justify-between hover:bg-tube-gray/30 p-2 rounded-lg cursor-pointer transition-colors"
+                  onClick={() => toast.info(`${country.country}: %${country.percentage} izleyici`)}
+                >
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">{country.flag}</span>
                     <span className="text-tube-white">{country.country}</span>
@@ -311,7 +358,7 @@ const ChannelAnalytics = () => {
                   <div className="flex items-center gap-2">
                     <div className="w-20 bg-tube-gray rounded-full h-2">
                       <div 
-                        className="bg-tube-red h-2 rounded-full" 
+                        className="bg-tube-red h-2 rounded-full transition-all duration-300" 
                         style={{ width: `${country.percentage}%` }}
                       />
                     </div>

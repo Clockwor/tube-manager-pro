@@ -42,6 +42,34 @@ const ChannelOverviewCard: React.FC<ChannelOverviewCardProps> = ({
     return flags[countryCode] || '🌍';
   };
 
+  const getTagColor = (tagId: string): string => {
+    const tagColors: Record<string, string> = {
+      tech: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
+      gaming: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
+      food: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
+      education: 'bg-green-500/20 text-green-400 border-green-500/30',
+      entertainment: 'bg-pink-500/20 text-pink-400 border-pink-500/30',
+      music: 'bg-red-500/20 text-red-400 border-red-500/30',
+      sports: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+      news: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
+    };
+    return tagColors[tagId] || 'bg-tube-gray/30 text-tube-white/70 border-tube-lightgray/30';
+  };
+
+  const getTagLabel = (tagId: string): string => {
+    const tagLabels: Record<string, string> = {
+      tech: 'Teknoloji',
+      gaming: 'Oyun',
+      food: 'Yemek',
+      education: 'Eğitim',
+      entertainment: 'Eğlence',
+      music: 'Müzik',
+      sports: 'Spor',
+      news: 'Haber',
+    };
+    return tagLabels[tagId] || tagId;
+  };
+
   return (
     <Card className="bg-tube-dark border-tube-lightgray/30 hover:border-tube-red/50 transition-all duration-300 group">
       <CardHeader className="pb-3">
@@ -60,12 +88,34 @@ const ChannelOverviewCard: React.FC<ChannelOverviewCardProps> = ({
                   <Verified className="h-4 w-4 text-blue-500 fill-current" />
                 )}
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-tube-white/60 text-sm">@{channel.handle}</span>
                 <Badge variant="outline" className="text-xs border-tube-lightgray/30">
                   {getCountryFlag(channel.country)} {channel.language.toUpperCase()}
                 </Badge>
               </div>
+              {/* Tags */}
+              {channel.tags && channel.tags.length > 0 && (
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {channel.tags.slice(0, 3).map((tag, index) => (
+                    <Badge 
+                      key={index} 
+                      variant="outline"
+                      className={`text-xs ${getTagColor(tag)}`}
+                    >
+                      {getTagLabel(tag)}
+                    </Badge>
+                  ))}
+                  {channel.tags.length > 3 && (
+                    <Badge 
+                      variant="outline" 
+                      className="text-xs border-tube-lightgray/30 text-tube-white/60"
+                    >
+                      +{channel.tags.length - 3}
+                    </Badge>
+                  )}
+                </div>
+              )}
             </div>
           </div>
           <Button

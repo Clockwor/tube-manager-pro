@@ -2,6 +2,7 @@ import React from 'react';
 import { Users, Eye, Bell } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
 
 interface ChannelCardProps {
@@ -11,6 +12,7 @@ interface ChannelCardProps {
   thumbnailUrl: string;
   country?: string;
   id?: string;
+  tags?: string[];
 }
 
 // Map of country codes to flag emojis
@@ -39,7 +41,8 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
   views, 
   thumbnailUrl,
   country,
-  id = '1'
+  id = '1',
+  tags = []
 }) => {
   const navigate = useNavigate();
 
@@ -87,6 +90,29 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
           </div>
         </div>
         
+        {/* Tags */}
+        {tags.length > 0 && (
+          <div className="flex flex-wrap gap-1 mb-3">
+            {tags.slice(0, 3).map((tag, index) => (
+              <Badge 
+                key={index} 
+                variant="secondary" 
+                className="text-xs bg-tube-red/20 text-tube-red border-tube-red/30 hover:bg-tube-red/30"
+              >
+                {tag}
+              </Badge>
+            ))}
+            {tags.length > 3 && (
+              <Badge 
+                variant="outline" 
+                className="text-xs border-tube-lightgray/30 text-tube-white/60"
+              >
+                +{tags.length - 3}
+              </Badge>
+            )}
+          </div>
+        )}
+
         {/* Country and Language indicators */}
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">

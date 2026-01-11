@@ -13,6 +13,7 @@ export interface YouTubeChannel {
   totalViews: number;
   publishedAt: string;
   verified: boolean;
+  tags?: string[];
   stats: {
     subscribersLast30Days: number;
     viewsLast30Days: number;

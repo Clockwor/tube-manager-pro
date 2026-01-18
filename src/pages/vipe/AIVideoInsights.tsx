@@ -27,6 +27,7 @@ import {
   Building,
   Activity
 } from 'lucide-react';
+import BackToVIPE from '@/components/BackToVIPE';
 
 const AIVideoInsights = () => {
   const [videoUrl, setVideoUrl] = useState('');
@@ -119,6 +120,9 @@ const AIVideoInsights = () => {
   return (
     <PageContainer>
       <div className="space-y-8">
+        {/* Back Button */}
+        <BackToVIPE />
+
         {/* Header */}
         <div className="space-y-4">
           <div className="flex items-center gap-3">

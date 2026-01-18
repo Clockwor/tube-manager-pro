@@ -18,6 +18,7 @@ import {
   Video,
   Image
 } from 'lucide-react';
+import BackToVIPE from '@/components/BackToVIPE';
 
 const Bookmarks = () => {
   const [bookmarks] = useState([
@@ -104,6 +105,9 @@ const Bookmarks = () => {
   return (
     <PageContainer>
       <div className="space-y-8">
+        {/* Back Button */}
+        <BackToVIPE />
+
         {/* Header */}
         <div className="space-y-4">
           <div className="flex items-center gap-3">

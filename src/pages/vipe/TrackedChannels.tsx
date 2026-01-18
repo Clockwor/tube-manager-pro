@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { useVIPE } from '@/hooks/useVIPE';
 import { toast } from 'sonner';
+import BackToVIPE from '@/components/BackToVIPE';
 
 const TrackedChannels = () => {
   const [folders, setFolders] = useState([
@@ -98,6 +99,9 @@ const TrackedChannels = () => {
   return (
     <PageContainer>
       <div className="space-y-8">
+        {/* Back Button */}
+        <BackToVIPE />
+
         {/* Header */}
         <div className="space-y-4">
           <div className="flex items-center gap-3">

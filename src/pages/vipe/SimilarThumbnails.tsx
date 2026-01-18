@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Search, Image, Upload, Eye, Download, Star, TrendingUp, Users, Play } from 'lucide-react';
 import PageContainer from '@/components/PageContainer';
+import BackToVIPE from '@/components/BackToVIPE';
 
 interface Thumbnail {
   id: string;
@@ -101,6 +102,9 @@ const SimilarThumbnails = () => {
   return (
     <PageContainer>
       <div className="space-y-6">
+        {/* Back Button */}
+        <BackToVIPE />
+
         <div>
           <h1 className="text-3xl font-bold text-foreground">Similar Thumbnails</h1>
           <p className="text-muted-foreground">

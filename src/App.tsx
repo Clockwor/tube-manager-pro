@@ -32,6 +32,7 @@ import Filters from "./pages/vipe/Filters";
 import VisionBoards from "./pages/vipe/VisionBoards";
 import SimilarThumbnails from "./pages/vipe/SimilarThumbnails";
 import ThumbnailSearch from "./pages/vipe/ThumbnailSearch";
+import RandomOutliers from "./pages/vipe/RandomOutliers";
 
 const queryClient = new QueryClient();
 
@@ -69,6 +70,7 @@ const App = () => (
             <Route path="/vipe/vision-boards" element={<VisionBoards />} />
             <Route path="/vipe/similar-thumbnails" element={<SimilarThumbnails />} />
             <Route path="/vipe/thumbnail-search" element={<ThumbnailSearch />} />
+            <Route path="/vipe/random" element={<RandomOutliers />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

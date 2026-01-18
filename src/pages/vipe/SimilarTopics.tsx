@@ -23,6 +23,7 @@ import {
 import { useOutliers, useBookmarks } from '@/hooks/useVIPE';
 import { VideoOutlier, SearchFilters } from '@/types/vipe';
 import { toast } from 'sonner';
+import BackToVIPE from '@/components/BackToVIPE';
 
 const SimilarTopics = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -87,6 +88,9 @@ const SimilarTopics = () => {
   return (
     <PageContainer>
       <div className="space-y-6">
+        {/* Back Button */}
+        <BackToVIPE />
+
         {/* Header */}
         <div className="flex items-center gap-3">
           <div className="p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">

@@ -13,6 +13,7 @@ import { ContentCard } from '@/components/vipe/ContentCard';
 import { EmptyState } from '@/components/vipe/EmptyState';
 import { SkeletonCard } from '@/components/vipe/SkeletonCard';
 import { BatchActions } from '@/components/vipe/BatchActions';
+import BackToVIPE from '@/components/BackToVIPE';
 
 const popularNiches = [
   'Tech & Gaming',
@@ -110,6 +111,9 @@ const TitleGenerator = () => {
   return (
     <PageContainer>
       <div className="space-y-6">
+        {/* Back Button */}
+        <BackToVIPE />
+
         {/* Header */}
         <div className="flex items-center gap-3">
           <div className="p-3 rounded-lg bg-[hsl(var(--info-light))] border border-[hsl(var(--info))]">

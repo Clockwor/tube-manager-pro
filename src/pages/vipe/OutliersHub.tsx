@@ -22,6 +22,7 @@ import {
 import { useOutliers, useBookmarks } from '@/hooks/useVIPE';
 import { VideoOutlier, ShortsOutlier, SearchFilters } from '@/types/vipe';
 import { toast } from 'sonner';
+import BackToVIPE from '@/components/BackToVIPE';
 
 const OutliersHub = () => {
   const [outliers, setOutliers] = useState<VideoOutlier[]>([]);
@@ -97,6 +98,9 @@ const OutliersHub = () => {
   return (
     <PageContainer>
       <div className="space-y-6">
+        {/* Back Button */}
+        <BackToVIPE />
+
         {/* Header */}
         <div className="flex items-center gap-3">
           <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20">

@@ -13,6 +13,7 @@ import { CalendarIcon, Filter, X, Search, Save, Download } from 'lucide-react';
 import { format } from 'date-fns';
 import PageContainer from '@/components/PageContainer';
 import { cn } from '@/lib/utils';
+import BackToVIPE from '@/components/BackToVIPE';
 
 const Filters = () => {
   const [viewCountRange, setViewCountRange] = useState([0, 10000000]);
@@ -71,6 +72,9 @@ const Filters = () => {
   return (
     <PageContainer>
       <div className="space-y-6">
+        {/* Back Button */}
+        <BackToVIPE />
+
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-foreground">Advanced Filters</h1>

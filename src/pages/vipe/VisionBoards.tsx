@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Layout, Plus, Trash2, Edit2, Eye, Star, Calendar, Target, TrendingUp } from 'lucide-react';
 import PageContainer from '@/components/PageContainer';
+import BackToVIPE from '@/components/BackToVIPE';
 
 interface VisionBoard {
   id: string;
@@ -106,6 +107,9 @@ const VisionBoards = () => {
   return (
     <PageContainer>
       <div className="space-y-6">
+        {/* Back Button */}
+        <BackToVIPE />
+
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-foreground">Vision Boards</h1>

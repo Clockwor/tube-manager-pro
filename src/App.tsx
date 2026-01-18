@@ -31,6 +31,7 @@ import SimilarTopics from "./pages/vipe/SimilarTopics";
 import Filters from "./pages/vipe/Filters";
 import VisionBoards from "./pages/vipe/VisionBoards";
 import SimilarThumbnails from "./pages/vipe/SimilarThumbnails";
+import ThumbnailSearch from "./pages/vipe/ThumbnailSearch";
 
 const queryClient = new QueryClient();
 
@@ -67,6 +68,7 @@ const App = () => (
             <Route path="/vipe/filters" element={<Filters />} />
             <Route path="/vipe/vision-boards" element={<VisionBoards />} />
             <Route path="/vipe/similar-thumbnails" element={<SimilarThumbnails />} />
+            <Route path="/vipe/thumbnail-search" element={<ThumbnailSearch />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

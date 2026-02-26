@@ -29,7 +29,7 @@ const SocialPlatformCard: React.FC<SocialPlatformCardProps> = ({
 
   const handleCardClick = () => {
     if (connected) {
-      navigate('/upload');
+      navigate(`/social/${name.toLowerCase()}`);
     }
   };
 

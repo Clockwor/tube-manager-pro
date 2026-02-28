@@ -1,140 +1,26 @@
 
+
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageContainer from '@/components/PageContainer';
 import ChannelOverviewCard from '@/components/dashboard/ChannelOverviewCard';
 import { Button } from '@/components/ui/button';
 import { YouTubeChannel } from '@/types/youtube';
 import { Plus } from 'lucide-react';
 import AddChannelDialog, { NewChannelData } from '@/components/channels/AddChannelDialog';
-
-// YouTube channel data with detailed stats
-const channelsData: YouTubeChannel[] = [
-  {
-    id: '1',
-    name: 'Tech Tutorials',
-    handle: 'techtutorials',
-    avatar: 'https://via.placeholder.com/80/FF0000/FFFFFF?text=TT',
-    banner: '',
-    description: 'Tech tutorials and reviews',
-    subscriberCount: 120000,
-    totalViews: 5200000,
-    videoCount: 342,
-    country: 'US',
-    language: 'tr',
-    customUrl: 'techtutorials',
-    publishedAt: '2020-01-15',
-    verified: true,
-    growth: {
-      subscribers: { value: 2400, percentage: 2.1 },
-      views: { value: 150000, percentage: 3.0 },
-      videos: { value: 12, percentage: 3.6 }
-    },
-    stats: {
-      subscribersLast30Days: 2400,
-      viewsLast30Days: 150000,
-      videosLast30Days: 12,
-      estimatedRevenue: 3200,
-      engagementRate: 4.2,
-      avgViewsPerVideo: 15204
-    },
-    recentVideos: [],
-    analytics: {
-      viewsHistory: [],
-      subscribersHistory: [],
-      topCountries: [],
-      topAgeGroups: [],
-      avgSessionDuration: 320,
-      clickThroughRate: 4.2
-    }
-  },
-  {
-    id: '2',
-    name: 'Gaming Channel',
-    handle: 'gamingchannel',
-    avatar: 'https://via.placeholder.com/80/0000FF/FFFFFF?text=GC',
-    banner: '',
-    description: 'Gaming content and reviews',
-    subscriberCount: 85000,
-    totalViews: 3800000,
-    videoCount: 287,
-    country: 'GB',
-    language: 'tr',
-    customUrl: 'gamingchannel',
-    publishedAt: '2019-06-22',
-    verified: false,
-    growth: {
-      subscribers: { value: 1200, percentage: 1.4 },
-      views: { value: 95000, percentage: 2.5 },
-      videos: { value: 8, percentage: 2.9 }
-    },
-    stats: {
-      subscribersLast30Days: 1200,
-      viewsLast30Days: 95000,
-      videosLast30Days: 8,
-      estimatedRevenue: 2100,
-      engagementRate: 3.8,
-      avgViewsPerVideo: 13240
-    },
-    recentVideos: [],
-    analytics: {
-      viewsHistory: [],
-      subscribersHistory: [],
-      topCountries: [],
-      topAgeGroups: [],
-      avgSessionDuration: 285,
-      clickThroughRate: 3.7
-    }
-  },
-  {
-    id: '3',
-    name: 'Travel Vlogs',
-    handle: 'travelvlogs',
-    avatar: 'https://via.placeholder.com/80/00FF00/FFFFFF?text=TV',
-    banner: '',
-    description: 'Travel vlogs and adventures',
-    subscriberCount: 45000,
-    totalViews: 1700000,
-    videoCount: 156,
-    country: 'CA',
-    language: 'tr',
-    customUrl: 'travelvlogs',
-    publishedAt: '2021-03-10',
-    verified: true,
-    growth: {
-      subscribers: { value: 800, percentage: 1.8 },
-      views: { value: 42000, percentage: 2.5 },
-      videos: { value: 5, percentage: 3.3 }
-    },
-    stats: {
-      subscribersLast30Days: 800,
-      viewsLast30Days: 42000,
-      videosLast30Days: 5,
-      estimatedRevenue: 1400,
-      engagementRate: 5.1,
-      avgViewsPerVideo: 10897
-    },
-    recentVideos: [],
-    analytics: {
-      viewsHistory: [],
-      subscribersHistory: [],
-      topCountries: [],
-      topAgeGroups: [],
-      avgSessionDuration: 410,
-      clickThroughRate: 5.8
-    }
-  },
-];
+import { channelsData } from '@/data/channelsData';
 
 const Channels = () => {
+  const navigate = useNavigate();
   const [channels, setChannels] = useState<YouTubeChannel[]>(channelsData);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
   const handleManageChannel = (channelId: string) => {
-    window.location.href = `/channels/manage/${channelId}`;
+    navigate(`/channels/${channelId}`);
   };
 
   const handleAnalyzeChannel = (channelId: string) => {
-    window.location.href = `/channels/analytics/${channelId}`;
+    navigate(`/channels/${channelId}`);
   };
 
   const handleChannelAdded = (newChannel: NewChannelData) => {

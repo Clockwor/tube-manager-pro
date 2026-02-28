@@ -7,6 +7,10 @@ import {
   RefreshCw, Power, Upload, Hash, X, Sparkles, Wand2, PenTool,
   CalendarIcon, Globe, MessageCircle
 } from 'lucide-react';
+import {
+  AreaChart, Area, BarChart as RechartsBarChart, Bar, LineChart, Line,
+  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
+} from 'recharts';
 import PageContainer from '@/components/PageContainer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -147,6 +151,35 @@ const mockPosts = [
   { id: '3', title: 'Canlı yayın duyurusu', status: 'scheduled', date: '2024-01-20', views: 0, likes: 0, comments: 0, type: 'text' },
   { id: '4', title: 'Arkası plan videosu', status: 'scheduled', date: '2024-01-22', views: 0, likes: 0, comments: 0, type: 'video' },
   { id: '5', title: 'Müşteri yorumları derlemesi', status: 'draft', date: '', views: 0, likes: 0, comments: 0, type: 'image' },
+];
+
+const followerGrowthData = [
+  { name: 'Oca', followers: 28200, views: 85000, engagement: 3.2 },
+  { name: 'Şub', followers: 29100, views: 92000, engagement: 3.5 },
+  { name: 'Mar', followers: 30500, views: 105000, engagement: 3.8 },
+  { name: 'Nis', followers: 31200, views: 98000, engagement: 4.1 },
+  { name: 'May', followers: 32800, views: 118000, engagement: 4.3 },
+  { name: 'Haz', followers: 33500, views: 125000, engagement: 4.5 },
+  { name: 'Tem', followers: 34100, views: 132000, engagement: 4.6 },
+  { name: 'Ağu', followers: 35700, views: 128000, engagement: 4.8 },
+];
+
+const weeklyEngagementData = [
+  { name: 'Pzt', likes: 320, comments: 45, shares: 28 },
+  { name: 'Sal', likes: 280, comments: 38, shares: 22 },
+  { name: 'Çar', likes: 450, comments: 62, shares: 41 },
+  { name: 'Per', likes: 380, comments: 52, shares: 35 },
+  { name: 'Cum', likes: 520, comments: 78, shares: 55 },
+  { name: 'Cmt', likes: 610, comments: 95, shares: 68 },
+  { name: 'Paz', likes: 480, comments: 70, shares: 48 },
+];
+
+const contentPerformanceData = [
+  { name: 'Video', views: 45000, engagement: 5.2 },
+  { name: 'Görsel', views: 32000, engagement: 3.8 },
+  { name: 'Story', views: 28000, engagement: 6.1 },
+  { name: 'Reels', views: 62000, engagement: 7.4 },
+  { name: 'Canlı', views: 18000, engagement: 8.9 },
 ];
 
 const PlatformManage = () => {
@@ -329,6 +362,138 @@ const PlatformManage = () => {
 
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-6 mt-6">
+            {/* Follower Growth Chart */}
+            <Card className="border-tube-lightgray/20 bg-tube-gray/40">
+              <CardHeader>
+                <CardTitle className="text-tube-white text-lg flex items-center gap-2">
+                  <Users className="h-5 w-5 text-purple-400" />
+                  Takipçi Büyümesi
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[280px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={followerGrowthData}>
+                      <defs>
+                        <linearGradient id="followerGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#a855f7" stopOpacity={0.6} />
+                          <stop offset="95%" stopColor="#a855f7" stopOpacity={0.05} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
+                      <XAxis dataKey="name" tick={{ fill: '#9CA3AF', fontSize: 12 }} axisLine={{ stroke: '#333' }} />
+                      <YAxis tick={{ fill: '#9CA3AF', fontSize: 12 }} axisLine={{ stroke: '#333' }} />
+                      <Tooltip contentStyle={{ backgroundColor: '#1F2937', borderColor: '#374151', borderRadius: '8px', color: '#F9FAFB' }} />
+                      <Area type="monotone" dataKey="followers" stroke="#a855f7" strokeWidth={2} fill="url(#followerGrad)" />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Views Trend Chart */}
+            <Card className="border-tube-lightgray/20 bg-tube-gray/40">
+              <CardHeader>
+                <CardTitle className="text-tube-white text-lg flex items-center gap-2">
+                  <Eye className="h-5 w-5 text-blue-400" />
+                  Görüntülenme Trendi
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[280px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={followerGrowthData}>
+                      <defs>
+                        <linearGradient id="viewsGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.6} />
+                          <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.05} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
+                      <XAxis dataKey="name" tick={{ fill: '#9CA3AF', fontSize: 12 }} axisLine={{ stroke: '#333' }} />
+                      <YAxis tick={{ fill: '#9CA3AF', fontSize: 12 }} axisLine={{ stroke: '#333' }} />
+                      <Tooltip contentStyle={{ backgroundColor: '#1F2937', borderColor: '#374151', borderRadius: '8px', color: '#F9FAFB' }} />
+                      <Area type="monotone" dataKey="views" stroke="#3b82f6" strokeWidth={2} fill="url(#viewsGrad)" />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Weekly Engagement Bar Chart */}
+              <Card className="border-tube-lightgray/20 bg-tube-gray/40">
+                <CardHeader>
+                  <CardTitle className="text-tube-white text-lg flex items-center gap-2">
+                    <Heart className="h-5 w-5 text-pink-400" />
+                    Haftalık Etkileşim
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-[260px] w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <RechartsBarChart data={weeklyEngagementData}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
+                        <XAxis dataKey="name" tick={{ fill: '#9CA3AF', fontSize: 12 }} axisLine={{ stroke: '#333' }} />
+                        <YAxis tick={{ fill: '#9CA3AF', fontSize: 12 }} axisLine={{ stroke: '#333' }} />
+                        <Tooltip contentStyle={{ backgroundColor: '#1F2937', borderColor: '#374151', borderRadius: '8px', color: '#F9FAFB' }} />
+                        <Bar dataKey="likes" fill="#ec4899" radius={[4, 4, 0, 0]} name="Beğeni" />
+                        <Bar dataKey="comments" fill="#8b5cf6" radius={[4, 4, 0, 0]} name="Yorum" />
+                        <Bar dataKey="shares" fill="#06b6d4" radius={[4, 4, 0, 0]} name="Paylaşım" />
+                      </RechartsBarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Content Performance Bar Chart */}
+              <Card className="border-tube-lightgray/20 bg-tube-gray/40">
+                <CardHeader>
+                  <CardTitle className="text-tube-white text-lg flex items-center gap-2">
+                    <TrendingUp className="h-5 w-5 text-green-400" />
+                    İçerik Türü Performansı
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-[260px] w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <RechartsBarChart data={contentPerformanceData} layout="vertical">
+                        <CartesianGrid strokeDasharray="3 3" stroke="#333" horizontal={false} />
+                        <XAxis type="number" tick={{ fill: '#9CA3AF', fontSize: 12 }} axisLine={{ stroke: '#333' }} />
+                        <YAxis dataKey="name" type="category" tick={{ fill: '#9CA3AF', fontSize: 12 }} axisLine={{ stroke: '#333' }} width={60} />
+                        <Tooltip contentStyle={{ backgroundColor: '#1F2937', borderColor: '#374151', borderRadius: '8px', color: '#F9FAFB' }} />
+                        <Bar dataKey="views" fill="#22c55e" radius={[0, 4, 4, 0]} name="Görüntülenme" />
+                      </RechartsBarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Engagement Rate Line Chart */}
+            <Card className="border-tube-lightgray/20 bg-tube-gray/40">
+              <CardHeader>
+                <CardTitle className="text-tube-white text-lg flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5 text-yellow-400" />
+                  Etkileşim Oranı (%)
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[250px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={followerGrowthData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
+                      <XAxis dataKey="name" tick={{ fill: '#9CA3AF', fontSize: 12 }} axisLine={{ stroke: '#333' }} />
+                      <YAxis tick={{ fill: '#9CA3AF', fontSize: 12 }} axisLine={{ stroke: '#333' }} domain={[0, 'auto']} />
+                      <Tooltip contentStyle={{ backgroundColor: '#1F2937', borderColor: '#374151', borderRadius: '8px', color: '#F9FAFB' }} formatter={(value: number) => [`${value}%`, 'Etkileşim']} />
+                      <Line type="monotone" dataKey="engagement" stroke="#eab308" strokeWidth={2} dot={{ r: 4, fill: '#eab308', strokeWidth: 0 }} activeDot={{ r: 6, strokeWidth: 0 }} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Connected Accounts */}
             <Card className="border-tube-lightgray/20 bg-tube-gray/40">
               <CardHeader>
                 <CardTitle className="text-tube-white text-lg">Bağlı Hesaplar</CardTitle>
@@ -349,28 +514,7 @@ const PlatformManage = () => {
               </CardContent>
             </Card>
 
-            <Card className="border-tube-lightgray/20 bg-tube-gray/40">
-              <CardHeader>
-                <CardTitle className="text-tube-white text-lg">Son Performans</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-3 gap-4 text-center">
-                  <div className="p-4 rounded-lg bg-tube-gray/60">
-                    <p className="text-2xl font-bold text-tube-white">24</p>
-                    <p className="text-xs text-tube-white/60">Bu Ay Gönderi</p>
-                  </div>
-                  <div className="p-4 rounded-lg bg-tube-gray/60">
-                    <p className="text-2xl font-bold text-tube-white">4.8%</p>
-                    <p className="text-xs text-tube-white/60">Ort. Etkileşim</p>
-                  </div>
-                  <div className="p-4 rounded-lg bg-tube-gray/60">
-                    <p className="text-2xl font-bold text-tube-white">128K</p>
-                    <p className="text-xs text-tube-white/60">Toplam Görüntülenme</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
+            {/* Best Posting Times */}
             <Card className="border-tube-lightgray/20 bg-tube-gray/40">
               <CardHeader>
                 <CardTitle className="text-tube-white text-lg">En İyi Paylaşım Saatleri</CardTitle>

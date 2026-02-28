@@ -8,7 +8,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Users, Eye, Play, ChevronLeft, BarChart3, 
-  Settings, Video, Target, TrendingUp, ExternalLink, Radio
+  Settings, Video, Target, TrendingUp, ExternalLink, Radio,
+  Verified, Calendar, DollarSign
 } from 'lucide-react';
 import { toast } from 'sonner';
 import VideoManagement from '@/components/dashboard/VideoManagement';
@@ -21,87 +22,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-
-// Example channel data
-const channelData = {
-  name: 'Tech Tutorials',
-  subscribers: '120K',
-  views: '5.2M',
-  thumbnailUrl: 'https://via.placeholder.com/300x150/FF0000/FFFFFF?text=Tech',
-  country: 'us',
-  keywordData: {
-    score: 75,
-    status: 'Good',
-    keywords: [
-      { id: 1, text: 'coffee for beginners', volume: 2500, active: true },
-      { id: 2, text: 'best coffee machines', volume: 4800, active: true },
-      { id: 3, text: 'how to grind coffee', volume: 1500, active: false },
-      { id: 4, text: 'coffee for programmers', volume: 1800, active: true }
-    ],
-    matchingKeywords: [
-      { id: 5, text: 'coffee for developers', volume: 1200, active: true },
-      { id: 6, text: 'best coffee types', volume: 2000, active: false },
-      { id: 7, text: 'coffee for techies', volume: 1550, active: true }
-    ],
-    competitors: [
-      { id: 8, text: 'best coffee for mornings', volume: 3200, active: false },
-      { id: 9, text: 'how coffee affects productivity', volume: 1700, active: true },
-      { id: 10, text: 'coffee for tech professionals', volume: 1200, active: true }
-    ]
-  },
-  topVideos: [
-    { 
-      id: 1, 
-      title: "How to Get Started with Coffee", 
-      thumbnail: "/lovable-uploads/240e0d77-7132-495e-9635-c33ba6cd2a66.png", 
-      views: "54K",
-      channel: "Coffee Lovers",
-      channelAvatar: "https://via.placeholder.com/40/FF6700/FFFFFF?text=CL"
-    },
-    { 
-      id: 2, 
-      title: "Perfect Bean Selection Guide", 
-      thumbnail: "/lovable-uploads/240e0d77-7132-495e-9635-c33ba6cd2a66.png", 
-      views: "32K",
-      channel: "Morning Coffee",
-      channelAvatar: "https://via.placeholder.com/40/00A3FF/FFFFFF?text=MC"
-    },
-    { 
-      id: 3, 
-      title: "RATHER DIE Than Drink Bad Coffee", 
-      thumbnail: "/lovable-uploads/240e0d77-7132-495e-9635-c33ba6cd2a66.png", 
-      views: "128K",
-      channel: "TotalCoffee",
-      channelAvatar: "https://via.placeholder.com/40/FF3A5E/FFFFFF?text=TC"
-    },
-    { 
-      id: 4, 
-      title: "Coffee Break: A Beginner's Guide", 
-      thumbnail: "/lovable-uploads/240e0d77-7132-495e-9635-c33ba6cd2a66.png", 
-      views: "28K",
-      channel: "Coffee Daily",
-      channelAvatar: "https://via.placeholder.com/40/55BB00/FFFFFF?text=CD"
-    }
-  ]
-};
+import { channelsData } from '@/data/channelsData';
 
 const countryFlags: Record<string, string> = {
-  us: '🇺🇸',
-  uk: '🇬🇧',
-  ca: '🇨🇦',
-  au: '🇦🇺',
-  de: '🇩🇪',
-  fr: '🇫🇷',
-  jp: '🇯🇵',
-  kr: '🇰🇷',
-  cn: '🇨🇳',
-  in: '🇮🇳',
-  br: '🇧🇷',
-  mx: '🇲🇽',
-  es: '🇪🇸',
-  it: '🇮🇹',
-  ru: '🇷🇺',
-  tr: '🇹🇷'
+  US: '🇺🇸', GB: '🇬🇧', CA: '🇨🇦', AU: '🇦🇺', DE: '🇩🇪',
+  FR: '🇫🇷', TR: '🇹🇷', BR: '🇧🇷', JP: '🇯🇵', KR: '🇰🇷',
+  IN: '🇮🇳', MX: '🇲🇽', ES: '🇪🇸', IT: '🇮🇹', NL: '🇳🇱'
 };
 
 const ChannelManage = () => {
@@ -109,26 +35,39 @@ const ChannelManage = () => {
   const { channelId } = useParams<{ channelId: string }>();
   const [showLiveDialog, setShowLiveDialog] = useState(false);
   
-  // Using hardcoded data since we don't have actual API integration
-  const channel = channelData;
+  const channel = channelsData.find(c => c.id === channelId);
   
-  const handleBackClick = () => {
-    navigate('/channels');
+  if (!channel) {
+    return (
+      <PageContainer>
+        <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
+          <h1 className="text-2xl font-bold text-tube-white">Kanal Bulunamadı</h1>
+          <p className="text-tube-white/60">Bu ID ile eşleşen bir kanal bulunamadı.</p>
+          <Button onClick={() => navigate('/channels')} className="bg-primary text-primary-foreground">
+            <ChevronLeft className="h-4 w-4 mr-2" />
+            Kanallara Dön
+          </Button>
+        </div>
+      </PageContainer>
+    );
+  }
+
+  const formatNumber = (num: number): string => {
+    if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
+    if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
+    return num.toString();
   };
+
+  const handleBackClick = () => navigate('/channels');
 
   const handleOpenStudio = () => {
     toast.success('YouTube Studio açılıyor...', {
       description: 'Yeni sekmede YouTube Studio açılacak'
     });
-    // Simulate opening YouTube Studio
-    setTimeout(() => {
-      window.open('https://studio.youtube.com', '_blank');
-    }, 500);
+    setTimeout(() => window.open('https://studio.youtube.com', '_blank'), 500);
   };
 
-  const handleStartLive = () => {
-    setShowLiveDialog(true);
-  };
+  const handleStartLive = () => setShowLiveDialog(true);
 
   const handleConfirmLive = () => {
     setShowLiveDialog(false);
@@ -137,17 +76,11 @@ const ChannelManage = () => {
     });
   };
 
-  const formatNumber = (num: number) => {
-    if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
-    if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
-    return num.toString();
-  };
-
   return (
     <PageContainer>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-center mb-6">
+        <div className="flex items-center">
           <Button 
             variant="ghost" 
             size="sm" 
@@ -159,38 +92,49 @@ const ChannelManage = () => {
           </Button>
         </div>
 
-        {/* Channel Header */}
-        <Card className="bg-tube-dark border-tube-lightgray/30">
+        {/* Channel Header Card */}
+        <Card className="bg-tube-dark border-tube-lightgray/30 overflow-hidden">
+          {/* Banner */}
+          {channel.banner && (
+            <div className="h-32 bg-gradient-to-r from-tube-red/30 to-tube-dark overflow-hidden">
+              <img src={channel.banner} alt="Banner" className="w-full h-full object-cover opacity-60" />
+            </div>
+          )}
+          
           <div className="p-6">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-4">
-                <Avatar className="h-16 w-16 border-2 border-tube-lightgray/20">
-                  <AvatarImage src={channel.thumbnailUrl} alt={channel.name} />
-                  <AvatarFallback className="bg-tube-red text-white text-xl">
+                <Avatar className="h-20 w-20 border-3 border-tube-lightgray/20 -mt-8 relative z-10">
+                  <AvatarImage src={channel.avatar} alt={channel.name} />
+                  <AvatarFallback className="bg-tube-red text-white text-2xl">
                     {channel.name.slice(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <div className="flex items-center gap-3 mb-2">
+                  <div className="flex items-center gap-3 mb-1">
                     <h1 className="text-2xl font-bold text-tube-white">{channel.name}</h1>
-                    {channel.country && countryFlags[channel.country] && (
-                      <span className="text-2xl" title={channel.country.toUpperCase()}>
-                        {countryFlags[channel.country]}
-                      </span>
+                    {channel.verified && <Verified className="h-5 w-5 text-blue-500 fill-current" />}
+                    {countryFlags[channel.country] && (
+                      <span className="text-xl">{countryFlags[channel.country]}</span>
                     )}
                   </div>
-                  <div className="flex items-center gap-6 text-tube-white/70">
+                  <p className="text-tube-white/50 text-sm mb-2">@{channel.handle}</p>
+                  <div className="flex items-center gap-6 text-tube-white/70 text-sm">
                     <div className="flex items-center gap-1">
-                      <Users size={16} />
-                      <span>{channel.subscribers} abone</span>
+                      <Users size={14} />
+                      <span>{formatNumber(channel.subscriberCount)} abone</span>
                     </div>
                     <div className="flex items-center gap-1">
-                      <Eye size={16} />
-                      <span>{channel.views} görüntülenme</span>
+                      <Eye size={14} />
+                      <span>{formatNumber(channel.totalViews)} görüntülenme</span>
                     </div>
                     <div className="flex items-center gap-1">
-                      <Play size={16} />
-                      <span>87 video</span>
+                      <Play size={14} />
+                      <span>{channel.videoCount} video</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Calendar size={14} />
+                      <span>{new Date(channel.publishedAt).toLocaleDateString('tr-TR')}</span>
                     </div>
                   </div>
                 </div>
@@ -215,45 +159,46 @@ const ChannelManage = () => {
               </div>
             </div>
 
+            {/* Description */}
+            {channel.description && (
+              <p className="text-tube-white/60 text-sm mb-6 max-w-2xl">{channel.description}</p>
+            )}
+
             {/* Quick Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
               <Card className="bg-tube-gray/40 border-tube-lightgray/30">
                 <div className="p-4 text-center">
-                  <div className="flex items-center justify-center mb-2">
-                    <TrendingUp className="h-6 w-6 text-green-500" />
-                  </div>
-                  <p className="text-2xl font-bold text-tube-white">+15.3%</p>
-                  <p className="text-tube-white/70 text-sm">Aylık Büyüme</p>
+                  <TrendingUp className="h-5 w-5 text-green-500 mx-auto mb-1" />
+                  <p className="text-xl font-bold text-tube-white">+{channel.growth.subscribers.percentage.toFixed(1)}%</p>
+                  <p className="text-tube-white/60 text-xs">Abone Büyümesi</p>
                 </div>
               </Card>
-              
               <Card className="bg-tube-gray/40 border-tube-lightgray/30">
                 <div className="p-4 text-center">
-                  <div className="flex items-center justify-center mb-2">
-                    <Eye className="h-6 w-6 text-blue-500" />
-                  </div>
-                  <p className="text-2xl font-bold text-tube-white">2.4M</p>
-                  <p className="text-tube-white/70 text-sm">Bu Ay Görüntülenme</p>
+                  <Eye className="h-5 w-5 text-blue-500 mx-auto mb-1" />
+                  <p className="text-xl font-bold text-tube-white">{formatNumber(channel.stats.viewsLast30Days)}</p>
+                  <p className="text-tube-white/60 text-xs">Bu Ay Görüntülenme</p>
                 </div>
               </Card>
-              
               <Card className="bg-tube-gray/40 border-tube-lightgray/30">
                 <div className="p-4 text-center">
-                  <div className="flex items-center justify-center mb-2">
-                    <Target className="h-6 w-6 text-purple-500" />
-                  </div>
-                  <p className="text-2xl font-bold text-tube-white">8.7%</p>
-                  <p className="text-tube-white/70 text-sm">Etkileşim Oranı</p>
+                  <Target className="h-5 w-5 text-purple-500 mx-auto mb-1" />
+                  <p className="text-xl font-bold text-tube-white">{channel.stats.engagementRate.toFixed(1)}%</p>
+                  <p className="text-tube-white/60 text-xs">Etkileşim Oranı</p>
                 </div>
               </Card>
-              
               <Card className="bg-tube-gray/40 border-tube-lightgray/30">
                 <div className="p-4 text-center">
-                  <div className="flex items-center justify-center mb-2">
-                    <Video className="h-6 w-6 text-tube-red" />
-                  </div>
-                  <p className="text-2xl font-bold text-tube-white">4</p>
-                  <p className="text-tube-white/70 text-sm">Bu Ay Video</p>
+                  <Video className="h-5 w-5 text-tube-red mx-auto mb-1" />
+                  <p className="text-xl font-bold text-tube-white">{channel.stats.videosLast30Days}</p>
+                  <p className="text-tube-white/60 text-xs">Bu Ay Video</p>
+                </div>
+              </Card>
+              <Card className="bg-tube-gray/40 border-tube-lightgray/30">
+                <div className="p-4 text-center">
+                  <DollarSign className="h-5 w-5 text-emerald-500 mx-auto mb-1" />
+                  <p className="text-xl font-bold text-tube-white">${formatNumber(channel.stats.estimatedRevenue)}</p>
+                  <p className="text-tube-white/60 text-xs">Tahmini Gelir</p>
                 </div>
               </Card>
             </div>
@@ -300,7 +245,7 @@ const ChannelManage = () => {
               Canlı Yayın Başlat
             </DialogTitle>
             <DialogDescription className="text-tube-white/70">
-              Canlı yayın başlatmak üzeresiniz. Yayın ayarlarınızı kontrol edin.
+              {channel.name} kanalında canlı yayın başlatmak üzeresiniz.
             </DialogDescription>
           </DialogHeader>
           
@@ -309,6 +254,7 @@ const ChannelManage = () => {
               <p className="text-tube-white font-medium mb-2">Yayın Bilgileri</p>
               <div className="space-y-2 text-sm text-tube-white/70">
                 <p>Kanal: {channel.name}</p>
+                <p>Aboneler: {formatNumber(channel.subscriberCount)}</p>
                 <p>Kalite: 1080p HD</p>
                 <p>Gizlilik: Herkese Açık</p>
               </div>

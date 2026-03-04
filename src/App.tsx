@@ -16,6 +16,7 @@ import Clips from "./pages/Clips";
 import Transcription from "./pages/Transcription";
 import Social from "./pages/Social";
 import PlatformManage from "./pages/social/PlatformManage";
+import InstagramManage from "./pages/social/InstagramManage";
 import Accounts from "./pages/Accounts";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
@@ -55,6 +56,7 @@ const App = () => (
             <Route path="/clips" element={<Clips />} />
             <Route path="/transcription" element={<Transcription />} />
             <Route path="/social" element={<Social />} />
+            <Route path="/social/instagram" element={<InstagramManage />} />
             <Route path="/social/:platformId" element={<PlatformManage />} />
             <Route path="/accounts" element={<Accounts />} />
             <Route path="/settings" element={<Settings />} />

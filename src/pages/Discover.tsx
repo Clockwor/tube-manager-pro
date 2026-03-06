@@ -526,7 +526,7 @@ const Discover = () => {
                 <CardContent className="pt-0">
                   <ScrollArea className="h-[calc(100vh-280px)]">
                     <div className="space-y-2">
-                      {currentChannelProjects?.projects.length === 0 && (
+                      {currentChannelProjects.length === 0 && (
                         <div className="text-center py-8">
                           <FolderOpen className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
                           <p className="text-sm text-muted-foreground mb-3">Henüz proje yok</p>

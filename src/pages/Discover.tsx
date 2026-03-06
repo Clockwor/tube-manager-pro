@@ -156,7 +156,7 @@ const Discover = () => {
     );
   };
 
-  const totalSavedVideos = channelProjectsMap.reduce((sum, cp) => sum + cp.projects.reduce((s, p) => s + p.videos.length, 0), 0);
+  const totalSavedVideos = projects.reduce((sum, p) => sum + p.videos.length, 0);
 
   return (
     <PageContainer>

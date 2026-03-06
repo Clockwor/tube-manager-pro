@@ -465,29 +465,31 @@ const ProjectManagement = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {projects.map(project => (
+                {channelProjects.map(project => (
                   <div key={project.id} className="p-4 bg-tube-gray/20 rounded-lg">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-3">
-                        <span className="text-2xl">{project.status}</span>
+                        <span className="text-2xl">{statusIcon(project.status)}</span>
                         <div>
                           <h4 className="text-tube-white font-medium">{project.name}</h4>
-                          <p className="text-tube-white/70 text-sm">{project.channel}</p>
+                          <p className="text-tube-white/70 text-sm">{getChannelName(project.channelId)}</p>
                         </div>
                       </div>
-                      <Badge variant={project.status === '✅' ? 'default' : project.status === '🔄' ? 'secondary' : 'destructive'}>
-                        {project.progress}% Complete
+                      <Badge variant={project.status === 'completed' ? 'default' : project.status === 'in-progress' ? 'secondary' : 'destructive'}>
+                        {project.progress}% Tamamlandı
                       </Badge>
                     </div>
                     <Progress value={project.progress} className="mb-3" />
                     <div className="text-sm text-tube-white/70">
-                      <p>✅ Video uploaded</p>
-                      <p>✅ Transcript generated</p>
-                      <p>{project.progress > 50 ? '✅' : '🔄'} Scenes segmented</p>
-                      <p>{project.progress > 80 ? '✅' : '⏳'} Translation completed</p>
+                      <p>📁 {project.videos.length} referans video</p>
+                      <p>{project.progress > 0 ? '✅' : '⏳'} Video yüklendi</p>
+                      <p>{project.progress > 30 ? '✅' : '⏳'} Transkript oluşturuldu</p>
+                      <p>{project.progress > 50 ? '✅' : '⏳'} Sahneler bölündü</p>
+                      <p>{project.progress > 80 ? '✅' : '⏳'} Çeviri tamamlandı</p>
                     </div>
                   </div>
                 ))}
+
               </div>
             </CardContent>
           </Card>

@@ -228,7 +228,7 @@ const Discover = () => {
                     onClick={() => setShowProjectPanel(!showProjectPanel)}
                   >
                     <FolderOpen className="h-4 w-4 mr-1.5" />
-                    Projeler ({currentChannelProjects?.projects.length || 0})
+                    Projeler ({currentChannelProjects.length})
                   </Button>
                 </div>
               )}

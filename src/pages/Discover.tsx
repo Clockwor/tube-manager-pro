@@ -65,31 +65,20 @@ const Discover = () => {
   const handleCreateProject = () => {
     if (!newProjectName.trim() || !selectedChannelId) return;
 
-    const newProject: VideoProject = {
-      id: Date.now().toString(),
+    addProject({
       name: newProjectName,
       description: newProjectDesc,
+      channelId: selectedChannelId,
       videos: [],
-      createdAt: new Date().toISOString().split('T')[0]
-    };
-
-    setChannelProjectsMap(prev => {
-      const existing = prev.find(cp => cp.channelId === selectedChannelId);
-      if (existing) {
-        return prev.map(cp =>
-          cp.channelId === selectedChannelId
-            ? { ...cp, projects: [...cp.projects, newProject] }
-            : cp
-        );
-      }
-      const ch = channelsData.find(c => c.id === selectedChannelId);
-      return [...prev, { channelId: selectedChannelId, channelName: ch?.name || '', projects: [newProject] }];
+      status: 'planning',
+      progress: 0,
+      tags: [],
     });
 
     setNewProjectName('');
     setNewProjectDesc('');
     setIsCreateProjectOpen(false);
-    toast.success(`"${newProject.name}" projesi oluşturuldu`);
+    toast.success(`"${newProjectName}" projesi oluşturuldu`);
   };
 
   const handleSaveToProject = (projectId: string, video: any) => {

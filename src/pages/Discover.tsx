@@ -514,7 +514,7 @@ const Discover = () => {
                       <div>
                         <CardTitle className="text-sm">{selectedChannel?.name}</CardTitle>
                         <CardDescription className="text-xs">
-                          {currentChannelProjects?.projects.length || 0} proje
+                          {currentChannelProjects.length} proje
                         </CardDescription>
                       </div>
                     </div>

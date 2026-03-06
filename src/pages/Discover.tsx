@@ -110,7 +110,7 @@ const Discover = () => {
   };
 
   const SaveToProjectButton = ({ video }: { video: any }) => {
-    if (!selectedChannelId || !currentChannelProjects?.projects.length) return null;
+    if (!selectedChannelId || !currentChannelProjects.length) return null;
 
     return (
       <DropdownMenu>

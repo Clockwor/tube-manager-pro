@@ -13,32 +13,8 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { ScrollArea } from '@/components/ui/scroll-area';
 import PageContainer from '@/components/PageContainer';
 import { channelsData } from '@/data/channelsData';
+import { useProjectStore, SavedVideo } from '@/hooks/useProjectStore';
 import { toast } from 'sonner';
-
-interface SavedVideo {
-  id: string;
-  title: string;
-  channel: string;
-  views: string;
-  vph?: string;
-  performance?: number;
-  thumbnail: string;
-  savedAt: string;
-}
-
-interface VideoProject {
-  id: string;
-  name: string;
-  description: string;
-  videos: SavedVideo[];
-  createdAt: string;
-}
-
-interface ChannelProjects {
-  channelId: string;
-  channelName: string;
-  projects: VideoProject[];
-}
 
 const Discover = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -51,60 +27,11 @@ const Discover = () => {
   const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
   const [newProjectName, setNewProjectName] = useState('');
   const [newProjectDesc, setNewProjectDesc] = useState('');
-  const [channelProjectsMap, setChannelProjectsMap] = useState<ChannelProjects[]>([
-    {
-      channelId: '1',
-      channelName: 'Tech Tutorials',
-      projects: [
-        {
-          id: 'p1',
-          name: 'React İçerik Fikirleri',
-          description: 'React ile ilgili trend videolar ve ilham kaynakları',
-          videos: [],
-          createdAt: '2026-03-01'
-        },
-        {
-          id: 'p2',
-          name: 'Node.js Serisi Araştırma',
-          description: 'Node.js performans videoları için referans içerikler',
-          videos: [
-            {
-              id: 'sv1',
-              title: '10 Node.js Performance Tips',
-              channel: 'Fireship',
-              views: '1.2M',
-              vph: '980',
-              performance: 92,
-              thumbnail: '/placeholder.svg',
-              savedAt: '2026-02-28'
-            }
-          ],
-          createdAt: '2026-02-20'
-        }
-      ]
-    },
-    {
-      channelId: '2',
-      channelName: 'Gaming Channel',
-      projects: [
-        {
-          id: 'p3',
-          name: 'GTA VI İçerik Planı',
-          description: 'GTA VI çıkışı için hazırlık videoları',
-          videos: [],
-          createdAt: '2026-02-15'
-        }
-      ]
-    },
-    {
-      channelId: '3',
-      channelName: 'Travel Vlogs',
-      projects: []
-    }
-  ]);
+
+  const { projects, addProject, deleteProject, addVideoToProject, removeVideoFromProject, getProjectsByChannel } = useProjectStore();
 
   const selectedChannel = channelsData.find(c => c.id === selectedChannelId);
-  const currentChannelProjects = channelProjectsMap.find(cp => cp.channelId === selectedChannelId);
+  const currentChannelProjects = getProjectsByChannel(selectedChannelId);
 
   const outliers = [
     { id: 'o1', title: "10 Magic Tricks With Hands Only | Revealed", channel: "Magic Secrets", views: "2.1M", vph: "1.6K", thumbnail: "/placeholder.svg", performance: 95 },
@@ -138,31 +65,20 @@ const Discover = () => {
   const handleCreateProject = () => {
     if (!newProjectName.trim() || !selectedChannelId) return;
 
-    const newProject: VideoProject = {
-      id: Date.now().toString(),
+    addProject({
       name: newProjectName,
       description: newProjectDesc,
+      channelId: selectedChannelId,
       videos: [],
-      createdAt: new Date().toISOString().split('T')[0]
-    };
-
-    setChannelProjectsMap(prev => {
-      const existing = prev.find(cp => cp.channelId === selectedChannelId);
-      if (existing) {
-        return prev.map(cp =>
-          cp.channelId === selectedChannelId
-            ? { ...cp, projects: [...cp.projects, newProject] }
-            : cp
-        );
-      }
-      const ch = channelsData.find(c => c.id === selectedChannelId);
-      return [...prev, { channelId: selectedChannelId, channelName: ch?.name || '', projects: [newProject] }];
+      status: 'planning',
+      progress: 0,
+      tags: [],
     });
 
     setNewProjectName('');
     setNewProjectDesc('');
     setIsCreateProjectOpen(false);
-    toast.success(`"${newProject.name}" projesi oluşturuldu`);
+    toast.success(`"${newProjectName}" projesi oluşturuldu`);
   };
 
   const handleSaveToProject = (projectId: string, video: any) => {
@@ -177,47 +93,24 @@ const Discover = () => {
       savedAt: new Date().toISOString().split('T')[0]
     };
 
-    setChannelProjectsMap(prev =>
-      prev.map(cp => ({
-        ...cp,
-        projects: cp.projects.map(p =>
-          p.id === projectId
-            ? { ...p, videos: p.videos.some(v => v.title === savedVideo.title) ? p.videos : [...p.videos, savedVideo] }
-            : p
-        )
-      }))
-    );
+    addVideoToProject(projectId, savedVideo);
 
-    const project = channelProjectsMap.flatMap(cp => cp.projects).find(p => p.id === projectId);
+    const project = projects.find(p => p.id === projectId);
     toast.success(`"${video.title}" → ${project?.name || 'proje'} klasörüne eklendi`);
   };
 
   const handleRemoveFromProject = (projectId: string, videoId: string) => {
-    setChannelProjectsMap(prev =>
-      prev.map(cp => ({
-        ...cp,
-        projects: cp.projects.map(p =>
-          p.id === projectId
-            ? { ...p, videos: p.videos.filter(v => v.id !== videoId) }
-            : p
-        )
-      }))
-    );
+    removeVideoFromProject(projectId, videoId);
     toast.success('Video projeden kaldırıldı');
   };
 
   const handleDeleteProject = (projectId: string) => {
-    setChannelProjectsMap(prev =>
-      prev.map(cp => ({
-        ...cp,
-        projects: cp.projects.filter(p => p.id !== projectId)
-      }))
-    );
+    deleteProject(projectId);
     toast.success('Proje silindi');
   };
 
   const SaveToProjectButton = ({ video }: { video: any }) => {
-    if (!selectedChannelId || !currentChannelProjects?.projects.length) return null;
+    if (!selectedChannelId || !currentChannelProjects.length) return null;
 
     return (
       <DropdownMenu>
@@ -232,7 +125,7 @@ const Discover = () => {
             {selectedChannel?.name} Projeleri
           </div>
           <DropdownMenuSeparator />
-          {currentChannelProjects.projects.map(project => {
+          {currentChannelProjects.map(project => {
             const alreadySaved = project.videos.some(v => v.title === video.title);
             return (
               <DropdownMenuItem
@@ -263,7 +156,7 @@ const Discover = () => {
     );
   };
 
-  const totalSavedVideos = channelProjectsMap.reduce((sum, cp) => sum + cp.projects.reduce((s, p) => s + p.videos.length, 0), 0);
+  const totalSavedVideos = projects.reduce((sum, p) => sum + p.videos.length, 0);
 
   return (
     <PageContainer>
@@ -335,7 +228,7 @@ const Discover = () => {
                     onClick={() => setShowProjectPanel(!showProjectPanel)}
                   >
                     <FolderOpen className="h-4 w-4 mr-1.5" />
-                    Projeler ({currentChannelProjects?.projects.length || 0})
+                    Projeler ({currentChannelProjects.length})
                   </Button>
                 </div>
               )}
@@ -621,7 +514,7 @@ const Discover = () => {
                       <div>
                         <CardTitle className="text-sm">{selectedChannel?.name}</CardTitle>
                         <CardDescription className="text-xs">
-                          {currentChannelProjects?.projects.length || 0} proje
+                          {currentChannelProjects.length} proje
                         </CardDescription>
                       </div>
                     </div>
@@ -633,7 +526,7 @@ const Discover = () => {
                 <CardContent className="pt-0">
                   <ScrollArea className="h-[calc(100vh-280px)]">
                     <div className="space-y-2">
-                      {currentChannelProjects?.projects.length === 0 && (
+                      {currentChannelProjects.length === 0 && (
                         <div className="text-center py-8">
                           <FolderOpen className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
                           <p className="text-sm text-muted-foreground mb-3">Henüz proje yok</p>
@@ -644,7 +537,7 @@ const Discover = () => {
                         </div>
                       )}
 
-                      {currentChannelProjects?.projects.map(project => (
+                      {currentChannelProjects.map(project => (
                         <Collapsible key={project.id} defaultOpen={project.videos.length > 0}>
                           <div className="rounded-lg border border-border overflow-hidden">
                             <CollapsibleTrigger className="flex items-center justify-between w-full p-3 hover:bg-muted/50 transition-colors text-left">
@@ -784,14 +677,14 @@ const Discover = () => {
                 </div>
 
                 {/* Save to Project in Modal */}
-                {selectedChannelId && currentChannelProjects && currentChannelProjects.projects.length > 0 && (
+                {selectedChannelId && currentChannelProjects && currentChannelProjects.length > 0 && (
                   <div className="p-4 rounded-lg border border-primary/20 bg-primary/5">
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                       <FolderPlus className="h-4 w-4 text-primary" />
                       Projeye Kaydet — {selectedChannel?.name}
                     </h3>
                     <div className="flex flex-wrap gap-2">
-                      {currentChannelProjects.projects.map(project => {
+                      {currentChannelProjects.map(project => {
                         const alreadySaved = project.videos.some(v => v.title === selectedVideo.title);
                         return (
                           <Button

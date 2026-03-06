@@ -93,18 +93,9 @@ const Discover = () => {
       savedAt: new Date().toISOString().split('T')[0]
     };
 
-    setChannelProjectsMap(prev =>
-      prev.map(cp => ({
-        ...cp,
-        projects: cp.projects.map(p =>
-          p.id === projectId
-            ? { ...p, videos: p.videos.some(v => v.title === savedVideo.title) ? p.videos : [...p.videos, savedVideo] }
-            : p
-        )
-      }))
-    );
+    addVideoToProject(projectId, savedVideo);
 
-    const project = channelProjectsMap.flatMap(cp => cp.projects).find(p => p.id === projectId);
+    const project = projects.find(p => p.id === projectId);
     toast.success(`"${video.title}" → ${project?.name || 'proje'} klasörüne eklendi`);
   };
 

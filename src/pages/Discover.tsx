@@ -13,32 +13,8 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { ScrollArea } from '@/components/ui/scroll-area';
 import PageContainer from '@/components/PageContainer';
 import { channelsData } from '@/data/channelsData';
+import { useProjectStore, SavedVideo } from '@/hooks/useProjectStore';
 import { toast } from 'sonner';
-
-interface SavedVideo {
-  id: string;
-  title: string;
-  channel: string;
-  views: string;
-  vph?: string;
-  performance?: number;
-  thumbnail: string;
-  savedAt: string;
-}
-
-interface VideoProject {
-  id: string;
-  name: string;
-  description: string;
-  videos: SavedVideo[];
-  createdAt: string;
-}
-
-interface ChannelProjects {
-  channelId: string;
-  channelName: string;
-  projects: VideoProject[];
-}
 
 const Discover = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -51,60 +27,11 @@ const Discover = () => {
   const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
   const [newProjectName, setNewProjectName] = useState('');
   const [newProjectDesc, setNewProjectDesc] = useState('');
-  const [channelProjectsMap, setChannelProjectsMap] = useState<ChannelProjects[]>([
-    {
-      channelId: '1',
-      channelName: 'Tech Tutorials',
-      projects: [
-        {
-          id: 'p1',
-          name: 'React İçerik Fikirleri',
-          description: 'React ile ilgili trend videolar ve ilham kaynakları',
-          videos: [],
-          createdAt: '2026-03-01'
-        },
-        {
-          id: 'p2',
-          name: 'Node.js Serisi Araştırma',
-          description: 'Node.js performans videoları için referans içerikler',
-          videos: [
-            {
-              id: 'sv1',
-              title: '10 Node.js Performance Tips',
-              channel: 'Fireship',
-              views: '1.2M',
-              vph: '980',
-              performance: 92,
-              thumbnail: '/placeholder.svg',
-              savedAt: '2026-02-28'
-            }
-          ],
-          createdAt: '2026-02-20'
-        }
-      ]
-    },
-    {
-      channelId: '2',
-      channelName: 'Gaming Channel',
-      projects: [
-        {
-          id: 'p3',
-          name: 'GTA VI İçerik Planı',
-          description: 'GTA VI çıkışı için hazırlık videoları',
-          videos: [],
-          createdAt: '2026-02-15'
-        }
-      ]
-    },
-    {
-      channelId: '3',
-      channelName: 'Travel Vlogs',
-      projects: []
-    }
-  ]);
+
+  const { projects, addProject, deleteProject, addVideoToProject, removeVideoFromProject, getProjectsByChannel } = useProjectStore();
 
   const selectedChannel = channelsData.find(c => c.id === selectedChannelId);
-  const currentChannelProjects = channelProjectsMap.find(cp => cp.channelId === selectedChannelId);
+  const currentChannelProjects = getProjectsByChannel(selectedChannelId);
 
   const outliers = [
     { id: 'o1', title: "10 Magic Tricks With Hands Only | Revealed", channel: "Magic Secrets", views: "2.1M", vph: "1.6K", thumbnail: "/placeholder.svg", performance: 95 },

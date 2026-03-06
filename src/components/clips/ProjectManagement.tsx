@@ -25,19 +25,46 @@ import {
   Settings,
   Calendar,
   Tag,
-  Globe
+  Globe,
+  Trash2,
+  FolderOpen
 } from 'lucide-react';
+import { channelsData } from '@/data/channelsData';
+import { useProjectStore } from '@/hooks/useProjectStore';
+import { toast } from 'sonner';
 
 const ProjectManagement = () => {
   const [selectedProject, setSelectedProject] = useState('');
-  const [selectedChannel, setSelectedChannel] = useState('');
+  const [selectedChannelId, setSelectedChannelId] = useState('');
+  const [newProjectName, setNewProjectName] = useState('');
+  const [newProjectDesc, setNewProjectDesc] = useState('');
+  const [newProjectTags, setNewProjectTags] = useState('');
 
-  const channels = ['Kanal_A', 'Kanal_B', 'Kanal_C'];
-  const projects = [
-    { id: 1, name: 'Belgesel Projesi', status: '✅', progress: 85, channel: 'Kanal_A' },
-    { id: 2, name: 'Haber Analizi', status: '🔄', progress: 60, channel: 'Kanal_B' },
-    { id: 3, name: 'Eğitim Serisi', status: '❌', progress: 25, channel: 'Kanal_A' },
-  ];
+  const { projects, addProject, deleteProject, updateProject, getProjectsByChannel, getChannelName } = useProjectStore();
+
+  const channelProjects = selectedChannelId ? getProjectsByChannel(selectedChannelId) : projects;
+
+  const statusIcon = (s: string) => s === 'completed' ? '✅' : s === 'in-progress' ? '🔄' : '📋';
+
+  const handleCreateProject = () => {
+    if (!newProjectName.trim() || !selectedChannelId) {
+      toast.error('Proje adı ve kanal seçimi zorunludur');
+      return;
+    }
+    addProject({
+      name: newProjectName,
+      description: newProjectDesc,
+      channelId: selectedChannelId,
+      videos: [],
+      status: 'planning',
+      progress: 0,
+      tags: newProjectTags.split(',').map(t => t.trim()).filter(Boolean),
+    });
+    setNewProjectName('');
+    setNewProjectDesc('');
+    setNewProjectTags('');
+    toast.success(`"${newProjectName}" projesi oluşturuldu`);
+  };
 
   return (
     <div className="space-y-6">
@@ -51,33 +78,62 @@ const ProjectManagement = () => {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            {channels.map(channel => (
-              <Card key={channel} className="bg-tube-gray/20 border-tube-gray/40">
-                <CardContent className="p-4">
-                  <h3 className="text-tube-white font-medium mb-2">{channel}</h3>
-                  <div className="text-sm text-tube-white/70">
-                    <p>5 Active Projects</p>
-                    <p>12 Videos Uploaded</p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+            {channelsData.map(channel => {
+              const chProjects = getProjectsByChannel(channel.id);
+              const totalVideos = chProjects.reduce((sum, p) => sum + p.videos.length, 0);
+              return (
+                <Card 
+                  key={channel.id} 
+                  className={`cursor-pointer transition-all ${selectedChannelId === channel.id ? 'border-primary bg-primary/10' : 'bg-tube-gray/20 border-tube-gray/40 hover:border-primary/50'}`}
+                  onClick={() => setSelectedChannelId(channel.id)}
+                >
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-r from-primary to-purple-500 flex items-center justify-center text-xs font-bold text-primary-foreground">
+                        {channel.name[0]}
+                      </div>
+                      <h3 className="text-tube-white font-medium">{channel.name}</h3>
+                    </div>
+                    <div className="text-sm text-tube-white/70">
+                      <p>{chProjects.length} Proje</p>
+                      <p>{totalVideos} Referans Video</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
           
           <div className="space-y-2">
-            <h4 className="text-tube-white font-medium">Recent Projects</h4>
-            {projects.map(project => (
+            <h4 className="text-tube-white font-medium">Tüm Projeler</h4>
+            {channelProjects.length === 0 && (
+              <div className="text-center py-6 text-tube-white/50">
+                <FolderOpen className="w-10 h-10 mx-auto mb-2 opacity-50" />
+                <p>Henüz proje yok. Bir kanal seçin ve yeni proje oluşturun.</p>
+              </div>
+            )}
+            {channelProjects.map(project => (
               <div key={project.id} className="flex items-center justify-between p-3 bg-tube-gray/20 rounded-lg">
                 <div className="flex items-center gap-3">
-                  <span className="text-xl">{project.status}</span>
+                  <span className="text-xl">{statusIcon(project.status)}</span>
                   <div>
                     <p className="text-tube-white font-medium">{project.name}</p>
-                    <p className="text-tube-white/70 text-sm">{project.channel}</p>
+                    <p className="text-tube-white/70 text-sm">{getChannelName(project.channelId)} • {project.videos.length} referans video</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
+                  {project.tags.length > 0 && (
+                    <div className="flex gap-1">
+                      {project.tags.slice(0, 2).map(tag => (
+                        <Badge key={tag} variant="secondary" className="text-[10px]">{tag}</Badge>
+                      ))}
+                    </div>
+                  )}
                   <Progress value={project.progress} className="w-24" />
                   <span className="text-tube-white/70 text-sm">{project.progress}%</span>
+                  <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => { deleteProject(project.id); toast.success('Proje silindi'); }}>
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </Button>
                 </div>
               </div>
             ))}
@@ -87,16 +143,16 @@ const ProjectManagement = () => {
 
       <Tabs defaultValue="project-creation" className="w-full">
         <TabsList className="bg-tube-gray/40 mb-6 grid grid-cols-5 lg:grid-cols-10">
-          <TabsTrigger value="project-creation">🎬 Project</TabsTrigger>
+          <TabsTrigger value="project-creation">🎬 Proje</TabsTrigger>
           <TabsTrigger value="upload">📥 Upload</TabsTrigger>
-          <TabsTrigger value="transcription">📝 Transcript</TabsTrigger>
-          <TabsTrigger value="segmentation">✂️ Scenes</TabsTrigger>
-          <TabsTrigger value="translation">🌍 Translate</TabsTrigger>
-          <TabsTrigger value="montage">🎞️ Montage</TabsTrigger>
-          <TabsTrigger value="status">📊 Status</TabsTrigger>
+          <TabsTrigger value="transcription">📝 Transkript</TabsTrigger>
+          <TabsTrigger value="segmentation">✂️ Sahneler</TabsTrigger>
+          <TabsTrigger value="translation">🌍 Çeviri</TabsTrigger>
+          <TabsTrigger value="montage">🎞️ Montaj</TabsTrigger>
+          <TabsTrigger value="status">📊 Durum</TabsTrigger>
           <TabsTrigger value="thumbnail">🎨 Thumbnail</TabsTrigger>
-          <TabsTrigger value="publishing">📤 Publish</TabsTrigger>
-          <TabsTrigger value="insights">📊 Insights</TabsTrigger>
+          <TabsTrigger value="publishing">📤 Yayın</TabsTrigger>
+          <TabsTrigger value="insights">📊 Analiz</TabsTrigger>
         </TabsList>
 
         {/* Project Creation Panel */}
@@ -105,58 +161,97 @@ const ProjectManagement = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-tube-white">
                 <FolderPlus className="w-5 h-5" />
-                Project Creation Panel
+                Yeni Video Projesi Oluştur
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-tube-white text-sm font-medium mb-2 block">Project Name</label>
-                  <Input placeholder="Enter project name" className="bg-tube-gray/20 border-tube-gray/40" />
+                  <label className="text-tube-white text-sm font-medium mb-2 block">Proje Adı</label>
+                  <Input 
+                    placeholder="Örn: React 19 Tutorial Serisi" 
+                    className="bg-tube-gray/20 border-tube-gray/40"
+                    value={newProjectName}
+                    onChange={(e) => setNewProjectName(e.target.value)}
+                  />
                 </div>
                 <div>
-                  <label className="text-tube-white text-sm font-medium mb-2 block">Channel</label>
-                  <Select value={selectedChannel} onValueChange={setSelectedChannel}>
+                  <label className="text-tube-white text-sm font-medium mb-2 block">Kanal</label>
+                  <Select value={selectedChannelId} onValueChange={setSelectedChannelId}>
                     <SelectTrigger className="bg-tube-gray/20 border-tube-gray/40">
-                      <SelectValue placeholder="Select channel" />
+                      <SelectValue placeholder="Kanal seçin" />
                     </SelectTrigger>
                     <SelectContent>
-                      {channels.map(channel => (
-                        <SelectItem key={channel} value={channel}>{channel}</SelectItem>
+                      {channelsData.map(channel => (
+                        <SelectItem key={channel.id} value={channel.id}>
+                          <div className="flex items-center gap-2">
+                            <div className="w-5 h-5 rounded-full bg-gradient-to-r from-primary to-purple-500 flex items-center justify-center text-[9px] font-bold text-primary-foreground">
+                              {channel.name[0]}
+                            </div>
+                            {channel.name}
+                          </div>
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <label className="text-tube-white text-sm font-medium mb-2 block">Date</label>
-                  <Input type="date" className="bg-tube-gray/20 border-tube-gray/40" />
+                  <label className="text-tube-white text-sm font-medium mb-2 block">Açıklama</label>
+                  <Input 
+                    placeholder="Proje hakkında kısa açıklama" 
+                    className="bg-tube-gray/20 border-tube-gray/40"
+                    value={newProjectDesc}
+                    onChange={(e) => setNewProjectDesc(e.target.value)}
+                  />
                 </div>
                 <div>
-                  <label className="text-tube-white text-sm font-medium mb-2 block">Target Language</label>
+                  <label className="text-tube-white text-sm font-medium mb-2 block">Hedef Dil</label>
                   <Select>
                     <SelectTrigger className="bg-tube-gray/20 border-tube-gray/40">
-                      <SelectValue placeholder="Select language" />
+                      <SelectValue placeholder="Dil seçin" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="tr">Turkish</SelectItem>
+                      <SelectItem value="tr">Türkçe</SelectItem>
                       <SelectItem value="en">English</SelectItem>
-                      <SelectItem value="de">German</SelectItem>
+                      <SelectItem value="de">Deutsch</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
               <div>
-                <label className="text-tube-white text-sm font-medium mb-2 block">Category Tags</label>
-                <div className="flex gap-2 flex-wrap mb-2">
-                  <Badge variant="secondary">belgesel</Badge>
-                  <Badge variant="secondary">haber</Badge>
-                  <Badge variant="secondary">ders</Badge>
-                </div>
-                <Input placeholder="Add new tag" className="bg-tube-gray/20 border-tube-gray/40" />
+                <label className="text-tube-white text-sm font-medium mb-2 block">Etiketler</label>
+                <Input 
+                  placeholder="Virgülle ayırın: react, tutorial, web" 
+                  className="bg-tube-gray/20 border-tube-gray/40"
+                  value={newProjectTags}
+                  onChange={(e) => setNewProjectTags(e.target.value)}
+                />
               </div>
-              <Button className="w-full bg-tube-red hover:bg-tube-red/80">
+
+              {/* Show reference videos from Discover */}
+              {selectedChannelId && getProjectsByChannel(selectedChannelId).length > 0 && (
+                <div className="p-4 bg-tube-gray/20 rounded-lg">
+                  <h4 className="text-tube-white font-medium mb-3 flex items-center gap-2">
+                    <FolderOpen className="w-4 h-4 text-primary" />
+                    Discover'dan Kaydedilen Referanslar
+                  </h4>
+                  <div className="space-y-2">
+                    {getProjectsByChannel(selectedChannelId).map(project => (
+                      <div key={project.id} className="flex items-center justify-between p-2 bg-tube-gray/30 rounded">
+                        <div>
+                          <p className="text-tube-white text-sm font-medium">{project.name}</p>
+                          <p className="text-tube-white/60 text-xs">{project.videos.length} referans video</p>
+                        </div>
+                        <Badge variant="secondary" className="text-xs">{project.status}</Badge>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <Button className="w-full bg-tube-red hover:bg-tube-red/80" onClick={handleCreateProject} disabled={!newProjectName.trim() || !selectedChannelId}>
                 <FolderPlus className="w-4 h-4 mr-2" />
-                Create Project
+                Proje Oluştur
               </Button>
             </CardContent>
           </Card>

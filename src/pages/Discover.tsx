@@ -125,7 +125,7 @@ const Discover = () => {
             {selectedChannel?.name} Projeleri
           </div>
           <DropdownMenuSeparator />
-          {currentChannelProjects.projects.map(project => {
+          {currentChannelProjects.map(project => {
             const alreadySaved = project.videos.some(v => v.title === video.title);
             return (
               <DropdownMenuItem

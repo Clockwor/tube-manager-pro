@@ -100,26 +100,12 @@ const Discover = () => {
   };
 
   const handleRemoveFromProject = (projectId: string, videoId: string) => {
-    setChannelProjectsMap(prev =>
-      prev.map(cp => ({
-        ...cp,
-        projects: cp.projects.map(p =>
-          p.id === projectId
-            ? { ...p, videos: p.videos.filter(v => v.id !== videoId) }
-            : p
-        )
-      }))
-    );
+    removeVideoFromProject(projectId, videoId);
     toast.success('Video projeden kaldırıldı');
   };
 
   const handleDeleteProject = (projectId: string) => {
-    setChannelProjectsMap(prev =>
-      prev.map(cp => ({
-        ...cp,
-        projects: cp.projects.filter(p => p.id !== projectId)
-      }))
-    );
+    deleteProject(projectId);
     toast.success('Proje silindi');
   };
 

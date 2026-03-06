@@ -677,7 +677,7 @@ const Discover = () => {
                 </div>
 
                 {/* Save to Project in Modal */}
-                {selectedChannelId && currentChannelProjects && currentChannelProjects.projects.length > 0 && (
+                {selectedChannelId && currentChannelProjects && currentChannelProjects.length > 0 && (
                   <div className="p-4 rounded-lg border border-primary/20 bg-primary/5">
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                       <FolderPlus className="h-4 w-4 text-primary" />

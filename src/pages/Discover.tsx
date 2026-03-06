@@ -684,7 +684,7 @@ const Discover = () => {
                       Projeye Kaydet — {selectedChannel?.name}
                     </h3>
                     <div className="flex flex-wrap gap-2">
-                      {currentChannelProjects.projects.map(project => {
+                      {currentChannelProjects.map(project => {
                         const alreadySaved = project.videos.some(v => v.title === selectedVideo.title);
                         return (
                           <Button

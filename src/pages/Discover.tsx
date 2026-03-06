@@ -537,7 +537,7 @@ const Discover = () => {
                         </div>
                       )}
 
-                      {currentChannelProjects?.projects.map(project => (
+                      {currentChannelProjects.map(project => (
                         <Collapsible key={project.id} defaultOpen={project.videos.length > 0}>
                           <div className="rounded-lg border border-border overflow-hidden">
                             <CollapsibleTrigger className="flex items-center justify-between w-full p-3 hover:bg-muted/50 transition-colors text-left">

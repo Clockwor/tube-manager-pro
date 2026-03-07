@@ -39,6 +39,8 @@ interface ProjectStore {
   updateProject: (projectId: string, updates: Partial<VideoProject>) => void;
   addVideoToProject: (projectId: string, video: SavedVideo) => void;
   removeVideoFromProject: (projectId: string, videoId: string) => void;
+  addNoteToProject: (projectId: string, text: string) => void;
+  deleteNoteFromProject: (projectId: string, noteId: string) => void;
   getProjectsByChannel: (channelId: string) => VideoProject[];
   getChannelName: (channelId: string) => string;
 }

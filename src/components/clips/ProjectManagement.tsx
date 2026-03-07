@@ -135,7 +135,7 @@ const ProjectManagement = () => {
                   )}
                   <Progress value={project.progress} className="w-24" />
                   <span className="text-tube-white/70 text-sm">{project.progress}%</span>
-                  <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => { deleteProject(project.id); toast.success('Proje silindi'); }}>
+                  <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive" onClick={(e) => { e.stopPropagation(); deleteProject(project.id); toast.success('Proje silindi'); }}>
                     <Trash2 className="h-3.5 w-3.5" />
                   </Button>
                 </div>

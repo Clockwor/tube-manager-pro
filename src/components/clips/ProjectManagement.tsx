@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { VideoProject } from '@/hooks/useProjectStore';
+import ProjectDetailDialog from './ProjectDetailDialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -39,6 +41,7 @@ const ProjectManagement = () => {
   const [newProjectName, setNewProjectName] = useState('');
   const [newProjectDesc, setNewProjectDesc] = useState('');
   const [newProjectTags, setNewProjectTags] = useState('');
+  const [detailProject, setDetailProject] = useState<VideoProject | null>(null);
 
   const { projects, addProject, deleteProject, updateProject, getProjectsByChannel, getChannelName } = useProjectStore();
 
@@ -56,6 +59,7 @@ const ProjectManagement = () => {
       description: newProjectDesc,
       channelId: selectedChannelId,
       videos: [],
+      notes: [],
       status: 'planning',
       progress: 0,
       tags: newProjectTags.split(',').map(t => t.trim()).filter(Boolean),
@@ -113,7 +117,7 @@ const ProjectManagement = () => {
               </div>
             )}
             {channelProjects.map(project => (
-              <div key={project.id} className="flex items-center justify-between p-3 bg-tube-gray/20 rounded-lg">
+              <div key={project.id} className="flex items-center justify-between p-3 bg-tube-gray/20 rounded-lg cursor-pointer hover:bg-tube-gray/30 transition-colors" onClick={() => setDetailProject(project)}>
                 <div className="flex items-center gap-3">
                   <span className="text-xl">{statusIcon(project.status)}</span>
                   <div>
@@ -131,7 +135,7 @@ const ProjectManagement = () => {
                   )}
                   <Progress value={project.progress} className="w-24" />
                   <span className="text-tube-white/70 text-sm">{project.progress}%</span>
-                  <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => { deleteProject(project.id); toast.success('Proje silindi'); }}>
+                  <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive" onClick={(e) => { e.stopPropagation(); deleteProject(project.id); toast.success('Proje silindi'); }}>
                     <Trash2 className="h-3.5 w-3.5" />
                   </Button>
                 </div>
@@ -614,6 +618,12 @@ const ProjectManagement = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <ProjectDetailDialog
+        project={detailProject ? projects.find(p => p.id === detailProject.id) || detailProject : null}
+        open={!!detailProject}
+        onOpenChange={(open) => !open && setDetailProject(null)}
+      />
     </div>
   );
 };

@@ -12,12 +12,19 @@ export interface SavedVideo {
   savedAt: string;
 }
 
+export interface ProjectNote {
+  id: string;
+  text: string;
+  createdAt: string;
+}
+
 export interface VideoProject {
   id: string;
   name: string;
   description: string;
   channelId: string;
   videos: SavedVideo[];
+  notes: ProjectNote[];
   status: 'planning' | 'in-progress' | 'completed';
   progress: number;
   tags: string[];
@@ -32,6 +39,8 @@ interface ProjectStore {
   updateProject: (projectId: string, updates: Partial<VideoProject>) => void;
   addVideoToProject: (projectId: string, video: SavedVideo) => void;
   removeVideoFromProject: (projectId: string, videoId: string) => void;
+  addNoteToProject: (projectId: string, text: string) => void;
+  deleteNoteFromProject: (projectId: string, noteId: string) => void;
   getProjectsByChannel: (channelId: string) => VideoProject[];
   getChannelName: (channelId: string) => string;
 }
@@ -45,6 +54,7 @@ const initialProjects: VideoProject[] = [
     description: 'React ile ilgili trend videolar ve ilham kaynakları',
     channelId: '1',
     videos: [],
+    notes: [],
     status: 'planning',
     progress: 15,
     tags: ['react', 'javascript'],
@@ -55,6 +65,7 @@ const initialProjects: VideoProject[] = [
     name: 'Node.js Serisi Araştırma',
     description: 'Node.js performans videoları için referans içerikler',
     channelId: '1',
+    notes: [{id: 'n1', text: 'Fireship tarzı hızlı anlatım kullan', createdAt: '2026-02-25'}],
     videos: [
       {
         id: 'sv1',
@@ -79,6 +90,7 @@ const initialProjects: VideoProject[] = [
     description: 'GTA VI çıkışı için hazırlık videoları',
     channelId: '2',
     videos: [],
+    notes: [],
     status: 'planning',
     progress: 25,
     tags: ['gaming', 'gta'],
@@ -123,6 +135,19 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
     ));
   }, []);
 
+  const addNoteToProject = useCallback((projectId: string, text: string) => {
+    const note: ProjectNote = { id: `n-${Date.now()}`, text, createdAt: new Date().toISOString().split('T')[0] };
+    setProjects(prev => prev.map(p =>
+      p.id === projectId ? { ...p, notes: [...p.notes, note] } : p
+    ));
+  }, []);
+
+  const deleteNoteFromProject = useCallback((projectId: string, noteId: string) => {
+    setProjects(prev => prev.map(p =>
+      p.id === projectId ? { ...p, notes: p.notes.filter(n => n.id !== noteId) } : p
+    ));
+  }, []);
+
   const getProjectsByChannel = useCallback((channelId: string) => {
     return projects.filter(p => p.channelId === channelId);
   }, [projects]);
@@ -139,6 +164,8 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
       updateProject,
       addVideoToProject,
       removeVideoFromProject,
+      addNoteToProject,
+      deleteNoteFromProject,
       getProjectsByChannel,
       getChannelName
     }}>

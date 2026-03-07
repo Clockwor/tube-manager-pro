@@ -90,6 +90,7 @@ const initialProjects: VideoProject[] = [
     description: 'GTA VI çıkışı için hazırlık videoları',
     channelId: '2',
     videos: [],
+    notes: [],
     status: 'planning',
     progress: 25,
     tags: ['gaming', 'gta'],

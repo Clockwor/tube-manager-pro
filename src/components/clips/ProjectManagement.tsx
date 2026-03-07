@@ -618,6 +618,12 @@ const ProjectManagement = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <ProjectDetailDialog
+        project={detailProject ? projects.find(p => p.id === detailProject.id) || detailProject : null}
+        open={!!detailProject}
+        onOpenChange={(open) => !open && setDetailProject(null)}
+      />
     </div>
   );
 };

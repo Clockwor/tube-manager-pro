@@ -41,6 +41,7 @@ const ProjectManagement = () => {
   const [newProjectName, setNewProjectName] = useState('');
   const [newProjectDesc, setNewProjectDesc] = useState('');
   const [newProjectTags, setNewProjectTags] = useState('');
+  const [detailProject, setDetailProject] = useState<VideoProject | null>(null);
 
   const { projects, addProject, deleteProject, updateProject, getProjectsByChannel, getChannelName } = useProjectStore();
 

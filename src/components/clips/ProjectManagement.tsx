@@ -117,7 +117,7 @@ const ProjectManagement = () => {
               </div>
             )}
             {channelProjects.map(project => (
-              <div key={project.id} className="flex items-center justify-between p-3 bg-tube-gray/20 rounded-lg">
+              <div key={project.id} className="flex items-center justify-between p-3 bg-tube-gray/20 rounded-lg cursor-pointer hover:bg-tube-gray/30 transition-colors" onClick={() => setDetailProject(project)}>
                 <div className="flex items-center gap-3">
                   <span className="text-xl">{statusIcon(project.status)}</span>
                   <div>

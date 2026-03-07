@@ -12,12 +12,19 @@ export interface SavedVideo {
   savedAt: string;
 }
 
+export interface ProjectNote {
+  id: string;
+  text: string;
+  createdAt: string;
+}
+
 export interface VideoProject {
   id: string;
   name: string;
   description: string;
   channelId: string;
   videos: SavedVideo[];
+  notes: ProjectNote[];
   status: 'planning' | 'in-progress' | 'completed';
   progress: number;
   tags: string[];

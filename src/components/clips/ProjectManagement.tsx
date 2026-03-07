@@ -56,6 +56,7 @@ const ProjectManagement = () => {
       description: newProjectDesc,
       channelId: selectedChannelId,
       videos: [],
+      notes: [],
       status: 'planning',
       progress: 0,
       tags: newProjectTags.split(',').map(t => t.trim()).filter(Boolean),

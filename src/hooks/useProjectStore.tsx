@@ -135,6 +135,19 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
     ));
   }, []);
 
+  const addNoteToProject = useCallback((projectId: string, text: string) => {
+    const note: ProjectNote = { id: `n-${Date.now()}`, text, createdAt: new Date().toISOString().split('T')[0] };
+    setProjects(prev => prev.map(p =>
+      p.id === projectId ? { ...p, notes: [...p.notes, note] } : p
+    ));
+  }, []);
+
+  const deleteNoteFromProject = useCallback((projectId: string, noteId: string) => {
+    setProjects(prev => prev.map(p =>
+      p.id === projectId ? { ...p, notes: p.notes.filter(n => n.id !== noteId) } : p
+    ));
+  }, []);
+
   const getProjectsByChannel = useCallback((channelId: string) => {
     return projects.filter(p => p.channelId === channelId);
   }, [projects]);
@@ -151,6 +164,8 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
       updateProject,
       addVideoToProject,
       removeVideoFromProject,
+      addNoteToProject,
+      deleteNoteFromProject,
       getProjectsByChannel,
       getChannelName
     }}>

@@ -54,6 +54,7 @@ const initialProjects: VideoProject[] = [
     description: 'React ile ilgili trend videolar ve ilham kaynakları',
     channelId: '1',
     videos: [],
+    notes: [],
     status: 'planning',
     progress: 15,
     tags: ['react', 'javascript'],

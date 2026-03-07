@@ -65,6 +65,7 @@ const initialProjects: VideoProject[] = [
     name: 'Node.js Serisi Araştırma',
     description: 'Node.js performans videoları için referans içerikler',
     channelId: '1',
+    notes: [{id: 'n1', text: 'Fireship tarzı hızlı anlatım kullan', createdAt: '2026-02-25'}],
     videos: [
       {
         id: 'sv1',

@@ -111,6 +111,10 @@ const loadProjects = (): VideoProject[] => {
 export const ProjectProvider = ({ children }: { children: ReactNode }) => {
   const [projects, setProjects] = useState<VideoProject[]>(loadProjects);
 
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
+  }, [projects]);
+
   const addProject = useCallback((project: Omit<VideoProject, 'id' | 'createdAt'>) => {
     const newProject: VideoProject = {
       ...project,

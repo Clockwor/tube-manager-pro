@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
 import { channelsData } from '@/data/channelsData';
 
 export interface SavedVideo {
@@ -47,59 +47,73 @@ interface ProjectStore {
 
 const ProjectContext = createContext<ProjectStore | null>(null);
 
-const initialProjects: VideoProject[] = [
-  {
-    id: 'p1',
-    name: 'React İçerik Fikirleri',
-    description: 'React ile ilgili trend videolar ve ilham kaynakları',
-    channelId: '1',
-    videos: [],
-    notes: [],
-    status: 'planning',
-    progress: 15,
-    tags: ['react', 'javascript'],
-    createdAt: '2026-03-01'
-  },
-  {
-    id: 'p2',
-    name: 'Node.js Serisi Araştırma',
-    description: 'Node.js performans videoları için referans içerikler',
-    channelId: '1',
-    notes: [{id: 'n1', text: 'Fireship tarzı hızlı anlatım kullan', createdAt: '2026-02-25'}],
-    videos: [
-      {
-        id: 'sv1',
-        title: '10 Node.js Performance Tips',
-        channel: 'Fireship',
-        views: '1.2M',
-        vph: '980',
-        performance: 92,
-        thumbnail: '/placeholder.svg',
-        savedAt: '2026-02-28'
-      }
-    ],
-    status: 'in-progress',
-    progress: 60,
-    tags: ['nodejs', 'backend'],
-    targetLanguage: 'tr',
-    createdAt: '2026-02-20'
-  },
-  {
-    id: 'p3',
-    name: 'GTA VI İçerik Planı',
-    description: 'GTA VI çıkışı için hazırlık videoları',
-    channelId: '2',
-    videos: [],
-    notes: [],
-    status: 'planning',
-    progress: 25,
-    tags: ['gaming', 'gta'],
-    createdAt: '2026-02-15'
+const STORAGE_KEY = 'tubepro-projects';
+
+const loadProjects = (): VideoProject[] => {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) return JSON.parse(stored);
+  } catch (e) {
+    console.error('Failed to load projects from localStorage', e);
   }
-];
+  return [
+    {
+      id: 'p1',
+      name: 'React İçerik Fikirleri',
+      description: 'React ile ilgili trend videolar ve ilham kaynakları',
+      channelId: '1',
+      videos: [],
+      notes: [],
+      status: 'planning',
+      progress: 15,
+      tags: ['react', 'javascript'],
+      createdAt: '2026-03-01'
+    },
+    {
+      id: 'p2',
+      name: 'Node.js Serisi Araştırma',
+      description: 'Node.js performans videoları için referans içerikler',
+      channelId: '1',
+      notes: [{id: 'n1', text: 'Fireship tarzı hızlı anlatım kullan', createdAt: '2026-02-25'}],
+      videos: [
+        {
+          id: 'sv1',
+          title: '10 Node.js Performance Tips',
+          channel: 'Fireship',
+          views: '1.2M',
+          vph: '980',
+          performance: 92,
+          thumbnail: '/placeholder.svg',
+          savedAt: '2026-02-28'
+        }
+      ],
+      status: 'in-progress',
+      progress: 60,
+      tags: ['nodejs', 'backend'],
+      targetLanguage: 'tr',
+      createdAt: '2026-02-20'
+    },
+    {
+      id: 'p3',
+      name: 'GTA VI İçerik Planı',
+      description: 'GTA VI çıkışı için hazırlık videoları',
+      channelId: '2',
+      videos: [],
+      notes: [],
+      status: 'planning',
+      progress: 25,
+      tags: ['gaming', 'gta'],
+      createdAt: '2026-02-15'
+    }
+  ];
+};
 
 export const ProjectProvider = ({ children }: { children: ReactNode }) => {
-  const [projects, setProjects] = useState<VideoProject[]>(initialProjects);
+  const [projects, setProjects] = useState<VideoProject[]>(loadProjects);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
+  }, [projects]);
 
   const addProject = useCallback((project: Omit<VideoProject, 'id' | 'createdAt'>) => {
     const newProject: VideoProject = {
